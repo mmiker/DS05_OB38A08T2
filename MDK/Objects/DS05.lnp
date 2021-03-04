@@ -1,0 +1,17 @@
+".\Objects\STARTUP_OB38A08T2.obj",
+".\Objects\Main.obj",
+".\Objects\InitROM.obj",
+".\Objects\Audio.obj",
+".\Objects\Bsp.obj",
+".\Objects\Fps.obj",
+".\Objects\I2C.obj",
+".\Objects\Led.obj",
+".\Objects\Timer.obj",
+".\Objects\Touch.obj",
+".\Objects\UART0.obj",
+".\Objects\EEPROM.obj",
+".\Objects\ADC.obj",
+".\Objects\dqiot_fp_sy.obj",
+".\Objects\mmi_fps.obj" 
+TO ".\Objects\DS05" 
+PRINT(".\Listings\DS05.m51") RAMSIZE(256) 

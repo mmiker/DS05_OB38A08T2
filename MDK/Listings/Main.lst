@@ -1,0 +1,166 @@
+C51 COMPILER V9.59.0.0   MAIN                                                              03/04/2021 14:31:22 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\Main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\Main.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc;..
+                    -\dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Main.lst) TABS(2) OBJECT(.\Objects\Main.obj)
+
+line level    source
+
+   1          #include "OB38A08T2.h"
+   2          #include "Bsp.h"
+   3          #include "Led.h"
+   4          #include "Audio.h"
+   5          #include "fps.h"
+   6          #include "Touch.h"
+   7          #include "Timer.h"
+   8          #include "UART0.h"
+   9          #include "I2C.h"
+  10          #include "mmi_fps.h"
+  11          #include "ADC.h"
+  12          
+  13          //1:enable, 0:disable
+  14          #define g_SleepCtrl (*((unsigned char volatile xdata *)0x30D))
+  15          unsigned char touch_t = 0xff;
+  16          
+  17          void WDT_ISR(void) interrupt d_WDT_Vector
+  18          {
+  19   1        ((void(code *)(void))0x200B)(); //WDT ISR Function
+  20   1      }
+  21          
+  22          void INT1_ISR(void) interrupt d_INT1_Vector
+  23          {
+  24   1        if (P2_6 == 0)
+  25   1        {
+  26   2          Led_Off(LED_TYPE_2);
+  27   2        }
+  28   1        else
+  29   1        {
+  30   2          Led_On(LED_TYPE_2);
+  31   2        }
+  32   1      }
+  33          
+  34          unsigned char c_data[3] = {'L', 'o', 0};
+  35          void main(void)
+  36          {
+  37   1        unsigned int num = 0;
+  38   1        unsigned char state = 0;
+  39   1        u16 ID = 0;
+  40   1      
+  41   1        Bsp_Init();
+  42   1        Led_Init();
+  43   1        Touch_Init();
+  44   1        TIMER_Init();
+  45   1        Audio_Init();
+  46   1        Fps_Init();
+  47   1        ADC_Init();
+  48   1      
+  49   1        LVC = 0x40; // For Power down mode
+  50   1      
+  51   1        //g_SleepCtrl = 0;
+  52   1      #if 0
+                TIMER1_Delay(5000);
+              
+C51 COMPILER V9.59.0.0   MAIN                                                              03/04/2021 14:31:22 PAGE 2   
+
+                Fps_Test();
+                TIMER1_Delay(2000);
+                if (UART0_RXLEN > 4)
+                {
+                  unsigned char i;
+                  for (i = 0; i < UART0_RXLEN - 1; i++)
+                  {
+                    if (UART0_RXBUF[i] == 0xEF && UART0_RXBUF[i + 1] == 0x01)
+                    {
+                      Led_On(LED_TYPE_ALL);
+                      break;
+                    }
+                  }
+                }
+              #else
+  70   1        //INT1_Init();
+  71   1      
+  72   1        //EA =1;
+  73   1      
+  74   1        TIMER1_Delay(1000);
+  75   1        I2C_Master_Write_Data(0x60, c_data, 2);
+  76   1      
+  77   1        TIMER1_Delay(1000);
+  78   1        I2C_Master_Write_Data(0x60, c_data, 2);
+  79   1      #endif
+  80   1        Led_On(LED_TYPE_3);
+  81   1      
+  82   1        state = adc_VolT();
+  83   1        if (state > 0)
+  84   1        {
+  85   2          //提示电量低
+  86   2          Audio_Play(AUD_ID_LOW_BATTERY);
+  87   2          if (state == 2)
+  88   2          {
+  89   3            Audio_Play(AUD_ID_LOW_BATTERY);
+  90   3          }
+  91   2        }
+  92   1      
+  93   1        while (1)
+  94   1        {
+  95   2          Touch_Normal();
+  96   2      
+  97   2          if (0xFF == Touch_Getinput())
+  98   2          {
+  99   3            FP_Light(FP_BLUE);
+ 100   3            touch_t = 0xff;
+ 101   3            Led_Off(LED_TYPE_1);
+ 102   3            num++;
+ 103   3          }
+ 104   2          else if (touch_t != Touch_Getinput())
+ 105   2          {
+ 106   3            touch_t = Touch_Getinput();
+ 107   3            Led_On(LED_TYPE_1);
+ 108   3      
+ 109   3            if (touch_t == 1)
+ 110   3              Add_FR(ID);
+ 111   3            if (touch_t == 2)
+ 112   3              Del_FR(1);
+ 113   3            if (touch_t == 3)
+ 114   3              Del_FR(0);
+ 115   3      
+ 116   3            //Audio_Stop();
+C51 COMPILER V9.59.0.0   MAIN                                                              03/04/2021 14:31:22 PAGE 3   
+
+ 117   3            //Audio_Play(AUD_BASE_ID_SYS_NUM_0 + touch_t);
+ 118   3            num = 0;
+ 119   3          }
+ 120   2      
+ 121   2          if (mmi_dq_fp_work() != 0)
+ 122   2            press_FR();
+ 123   2      
+ 124   2          // if (num > 60000) //TKSTATUS0 != 0 )
+ 125   2          // {
+ 126   2          //  g_SleepCtrl = 1; //Entering power down mode immediately
+ 127   2          //  num = 0;
+ 128   2          //  Led_Off(LED_TYPE_3);
+ 129   2          //  Bsp_Sleep();
+ 130   2          //  //LEDCON &= 0x7F;
+ 131   2          //  dCOM0 = 0;
+ 132   2          //  PCON |= 0x02;
+ 133   2          //  dCOM0 = 1;
+ 134   2          //  Led_On(LED_TYPE_3);
+ 135   2          //  Bsp_Wakeup();
+ 136   2          // }
+ 137   2        }
+ 138   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    383    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      8       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

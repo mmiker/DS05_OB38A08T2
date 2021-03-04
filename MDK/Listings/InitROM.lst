@@ -1,0 +1,380 @@
+A51 MACRO ASSEMBLER  INITROM                                                              03/04/2021 10:18:14 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\InitROM.obj
+ASSEMBLER INVOKED BY: D:\Keil_v5\C51\BIN\A51.EXE ..\src\InitROM.asm INCDIR(..\inc) SET(LARGE) DEBUG PRINT(.\Listings\Ini
+                      tROM.lst) OBJECT(.\Objects\InitROM.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;;
+                       2     ;;  aTouch_InitROM.asm
+                       3     ;;
+                       4     
+                       5         PUBLIC CO_TKEN0
+                       6         PUBLIC CO_TKEN1
+                       7         PUBLIC CO_TKCON
+                       8         PUBLIC CO_TKSW
+                       9         PUBLIC CO_TKPSSR
+                      10         PUBLIC CO_SKWKCNT
+                      11         PUBLIC CO_PSMODE
+                      12         PUBLIC CO_WKTKEN0
+                      13         PUBLIC CO_WKTKEN1
+                      14         PUBLIC CO_KEYSCANNUM
+                      15         PUBLIC CO_TKRVC
+                      16         PUBLIC CO_TKDC
+                      17         PUBLIC CO_TKFC0
+                      18         PUBLIC CO_TKFC1
+                      19         PUBLIC CO_TKFC4
+                      20         PUBLIC CO_TKFC2
+                      21         PUBLIC CO_TKFC3
+                      22         PUBLIC CO_PDGPEN
+                      23         PUBLIC CO_GKWKCNT
+                      24         PUBLIC CO_GPUCNT
+                      25         PUBLIC CO_SKUCNT
+                      26         PUBLIC CO_AUX
+                      27         PUBLIC CO_ALG
+                      28         PUBLIC CO_GP0S0
+                      29         PUBLIC CO_GP0S1
+                      30         PUBLIC CO_GP1S0
+                      31         PUBLIC CO_GP1S1
+                      32         PUBLIC CO_GP2S0
+                      33         PUBLIC CO_GP2S1
+                      34         PUBLIC CO_GP3S0
+                      35         PUBLIC CO_GP3S1
+                      36         PUBLIC CO_GP4S0
+                      37         PUBLIC CO_GP4S1
+                      38         PUBLIC CO_GP5S0
+                      39         PUBLIC CO_GP5S1
+                      40         PUBLIC CO_GP6S0
+                      41         PUBLIC CO_GP6S1
+                      42         PUBLIC CO_GP7S0
+                      43         PUBLIC CO_GP7S1
+                      44         PUBLIC CO_DEBOUNCE
+                      45         PUBLIC CO_RELEASE
+                      46         PUBLIC CO_SENSITIVITY
+                      47         PUBLIC CO_RAWMAX
+                      48         PUBLIC CO_RAWMIN
+                      49         PUBLIC _Touch_InitROM
+                      50     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      51     
+----                  52         CSEG    AT  1F30H
+1F30                  53     _Touch_InitROM:
+----                  54         CSEG    AT  1F30H
+1F30 02               55         DB    0x02
+                      56     
+----                  57         CSEG    AT  1F31H
+A51 MACRO ASSEMBLER  INITROM                                                              03/04/2021 10:18:14 PAGE     2
+
+1F31 20               58         DB    0x20
+                      59     
+----                  60         CSEG    AT  1F32H
+1F32 00               61         DB    0x00
+                      62     
+----                  63         CSEG    AT  1F33H
+1F33 FF               64         DB    0xFF
+                      65     
+----                  66         CSEG    AT  1F34H
+1F34                  67     CO_TKEN0:
+1F34 FD               68         DB    0xFD
+                      69     
+----                  70         CSEG    AT  1F35H
+1F35                  71     CO_TKEN1:
+1F35 F8               72         DB    0xF8
+                      73     
+----                  74         CSEG    AT  1F37H
+1F37                  75     CO_TKCON:
+1F37 01               76         DB    0x01
+                      77     
+----                  78         CSEG    AT  1F38H
+1F38                  79     CO_TKSW:
+1F38 10               80         DB    0x10
+                      81     
+----                  82         CSEG    AT  1F39H
+1F39                  83     CO_TKPSSR:
+1F39 08               84         DB    0x08
+                      85     
+----                  86         CSEG    AT  1F3AH
+1F3A                  87     CO_SKWKCNT:
+1F3A 01               88         DB    0x01
+                      89     
+                      90     ;>1: controled by watchdog timer
+                      91     ;1,0:controled by user
+----                  92         CSEG    AT  1F3BH
+1F3B                  93     CO_PSMODE:              ;power down mode
+1F3B 00               94         DB    0x00
+                      95     
+----                  96         CSEG    AT  1F3CH
+1F3C                  97     CO_WKTKEN0:
+1F3C FD               98         DB    0xFD
+                      99     
+----                 100         CSEG    AT  1F3DH
+1F3D                 101     CO_WKTKEN1:
+1F3D F8              102         DB    0xF8
+                     103     
+----                 104         CSEG    AT  1F3EH
+1F3E                 105     CO_PDGPEN:
+1F3E 00              106         DB    0x00
+                     107     
+----                 108         CSEG    AT  1F3FH
+1F3F                 109     CO_KEYSCANNUM:              ;Number of scan key
+1F3F 00              110         DB    0x00
+                     111     
+----                 112         CSEG    AT  1F40H
+1F40                 113     CO_TKRVC:
+1F40 0F              114         DB    0x0F
+                     115     
+----                 116         CSEG    AT  1F41H
+1F41                 117     CO_TKDC:
+1F41 02              118         DB    0x02
+                     119     
+----                 120         CSEG    AT  1F42H
+1F42                 121     CO_TKFC0:
+1F42 20              122         DB    0x20
+                     123     
+A51 MACRO ASSEMBLER  INITROM                                                              03/04/2021 10:18:14 PAGE     3
+
+----                 124         CSEG    AT  1F43H
+1F43                 125     CO_TKFC1:
+1F43 00              126         DB    0x00
+                     127     
+----                 128         CSEG    AT  1F44H
+1F44                 129     CO_TKFC4:               ;target frequency
+1F44 3F              130         DB    0x3F
+                     131     
+----                 132         CSEG    AT  1F45H
+1F45                 133     CO_TKFC2:               ;high frequency
+1F45 3F              134         DB    0x3F
+                     135     
+----                 136         CSEG    AT  1F46H
+1F46                 137     CO_TKFC3:               ;low frequency
+1F46 3F              138         DB    0x3F
+                     139     
+----                 140         CSEG    AT  1F47H
+1F47                 141     CO_GKWKCNT:
+1F47 01              142         DB    0x01
+                     143     
+----                 144         CSEG    AT  1F48H
+1F48                 145     CO_GPUCNT:
+1F48 00              146         DB    0x00
+                     147     
+----                 148         CSEG    AT  1F49H
+1F49                 149     CO_SKUCNT:
+1F49 1F              150         DB    0x1F
+                     151     
+----                 152         CSEG    AT  1F4AH
+1F4A                 153     CO_AUX:
+1F4A 40              154         DB    0x40
+                     155     
+----                 156         CSEG    AT  1F4BH
+1F4B                 157     CO_ALG:
+1F4B 00              158         DB    0x00          ; 1: Baseline
+                     159                             ; 2: Ignore Data
+                     160                             ; others: Max/Min limit
+                     161     
+----                 162         CSEG    AT  1F50H
+1F50                 163     CO_GP0S1:
+1F50 00              164         DB    0x00
+                     165     
+----                 166         CSEG    AT  1F51H
+1F51                 167     CO_GP0S0:
+1F51 00              168         DB    0x00
+                     169     
+----                 170         CSEG    AT  1F52H
+1F52                 171     CO_GP1S1:
+1F52 00              172         DB    0x00
+                     173     
+----                 174         CSEG    AT  1F53H
+1F53                 175     CO_GP1S0:
+1F53 00              176         DB    0x00
+                     177     
+----                 178         CSEG    AT  1F54H
+1F54                 179     CO_GP2S1:
+1F54 00              180         DB    0x00
+                     181     
+----                 182         CSEG    AT  1F55H
+1F55                 183     CO_GP2S0:
+1F55 00              184         DB    0x00
+                     185     
+----                 186         CSEG    AT  1F56H
+1F56                 187     CO_GP3S1:
+1F56 00              188         DB    0x00
+                     189     
+A51 MACRO ASSEMBLER  INITROM                                                              03/04/2021 10:18:14 PAGE     4
+
+----                 190         CSEG    AT  1F57H
+1F57                 191     CO_GP3S0:
+1F57 00              192         DB    0x00
+                     193     
+----                 194         CSEG    AT  1F58H
+1F58                 195     CO_GP4S1:
+1F58 00              196         DB    0x00
+                     197     
+----                 198         CSEG    AT  1F59H
+1F59                 199     CO_GP4S0:
+1F59 00              200         DB    0x00
+                     201     
+----                 202         CSEG    AT  1F5AH
+1F5A                 203     CO_GP5S1:
+1F5A 00              204         DB    0x00
+                     205     
+----                 206         CSEG    AT  1F5BH
+1F5B                 207     CO_GP5S0:
+1F5B 00              208         DB    0x00
+                     209     
+----                 210         CSEG    AT  1F5CH
+1F5C                 211     CO_GP6S1:
+1F5C 00              212         DB    0x00
+                     213     
+----                 214         CSEG    AT  1F5DH
+1F5D                 215     CO_GP6S0:
+1F5D 00              216         DB    0x00
+                     217     
+----                 218         CSEG    AT  1F5EH
+1F5E                 219     CO_GP7S1:
+1F5E 00              220         DB    0x00
+                     221     
+----                 222         CSEG    AT  1F5FH
+1F5F                 223     CO_GP7S0:
+1F5F 00              224         DB    0x00
+                     225     
+----                 226         CSEG    AT  1F60H
+1F60                 227     CO_DEBOUNCE:
+1F60 0A0A0A0A        228         DB    0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A
+1F64 0A0A0A0A                
+1F68 0A0A0A0A        229         DB    0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A,0x0A
+1F6C 0A0A0A0A                
+                     230     
+----                 231         CSEG    AT  1F70H
+1F70                 232     CO_RELEASE:
+1F70 19191919        233         DB    0x19,0x19,0x19,0x19,0x19,0x19,0x19,0x19
+1F74 19191919                
+1F78 19191919        234         DB    0x19,0x19,0x19,0x19,0x19,0x19,0x19,0x19
+1F7C 19191919                
+                     235     
+----                 236         CSEG    AT  1F80H
+1F80                 237     CO_SENSITIVITY:
+1F80 CDCDCDCD        238         DB    0xCD,0xCD,0xCD,0xCD,0xCD,0xCD,0xCD,0xCD
+1F84 CDCDCDCD                
+1F88 CDCDCDCD        239         DB    0xCD,0xCD,0xCD,0xCD,0xCD,0xCD,0xCD,0xCD
+1F8C CDCDCDCD                
+1F90 CDCDCDCD        240         DB    0xCD,0xCD,0xCD,0xCD,0xCD,0xCD,0xCD,0xCD
+1F94 CDCDCDCD                
+                     241     
+----                 242         CSEG    AT  1FA0H
+1FA0                 243     CO_RAWMAX:
+1FA0 FFFF            244         DW    0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF
+1FA2 FFFF                    
+1FA4 FFFF                    
+1FA6 FFFF                    
+1FA8 FFFF                    
+A51 MACRO ASSEMBLER  INITROM                                                              03/04/2021 10:18:14 PAGE     5
+
+1FAA FFFF                    
+1FAC FFFF                    
+1FAE FFFF                    
+1FB0 FFFF            245         DW    0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF
+1FB2 FFFF                    
+1FB4 FFFF                    
+1FB6 FFFF                    
+1FB8 FFFF                    
+1FBA FFFF                    
+1FBC FFFF                    
+1FBE FFFF                    
+1FC0 FFFF            246         DW    0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF
+1FC2 FFFF                    
+1FC4 FFFF                    
+1FC6 FFFF                    
+1FC8 FFFF                    
+1FCA FFFF                    
+1FCC FFFF                    
+1FCE FFFF                    
+                     247     
+                     248     
+----                 249         CSEG    AT  1FD0H
+1FD0                 250     CO_RAWMIN:
+1FD0 0000            251         DW    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+1FD2 0000                    
+1FD4 0000                    
+1FD6 0000                    
+1FD8 0000                    
+1FDA 0000                    
+1FDC 0000                    
+1FDE 0000                    
+1FE0 0000            252         DW    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+1FE2 0000                    
+1FE4 0000                    
+1FE6 0000                    
+1FE8 0000                    
+1FEA 0000                    
+1FEC 0000                    
+1FEE 0000                    
+1FF0 0000            253         DW    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+1FF2 0000                    
+1FF4 0000                    
+1FF6 0000                    
+1FF8 0000                    
+1FFA 0000                    
+1FFC 0000                    
+1FFE 0000                    
+                     254         END
+A51 MACRO ASSEMBLER  INITROM                                                              03/04/2021 10:18:14 PAGE     6
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+CO_ALG . . . . . .  C ADDR   1F4BH   A   
+CO_AUX . . . . . .  C ADDR   1F4AH   A   
+CO_DEBOUNCE. . . .  C ADDR   1F60H   A   
+CO_GKWKCNT . . . .  C ADDR   1F47H   A   
+CO_GP0S0 . . . . .  C ADDR   1F51H   A   
+CO_GP0S1 . . . . .  C ADDR   1F50H   A   
+CO_GP1S0 . . . . .  C ADDR   1F53H   A   
+CO_GP1S1 . . . . .  C ADDR   1F52H   A   
+CO_GP2S0 . . . . .  C ADDR   1F55H   A   
+CO_GP2S1 . . . . .  C ADDR   1F54H   A   
+CO_GP3S0 . . . . .  C ADDR   1F57H   A   
+CO_GP3S1 . . . . .  C ADDR   1F56H   A   
+CO_GP4S0 . . . . .  C ADDR   1F59H   A   
+CO_GP4S1 . . . . .  C ADDR   1F58H   A   
+CO_GP5S0 . . . . .  C ADDR   1F5BH   A   
+CO_GP5S1 . . . . .  C ADDR   1F5AH   A   
+CO_GP6S0 . . . . .  C ADDR   1F5DH   A   
+CO_GP6S1 . . . . .  C ADDR   1F5CH   A   
+CO_GP7S0 . . . . .  C ADDR   1F5FH   A   
+CO_GP7S1 . . . . .  C ADDR   1F5EH   A   
+CO_GPUCNT. . . . .  C ADDR   1F48H   A   
+CO_KEYSCANNUM. . .  C ADDR   1F3FH   A   
+CO_PDGPEN. . . . .  C ADDR   1F3EH   A   
+CO_PSMODE. . . . .  C ADDR   1F3BH   A   
+CO_RAWMAX. . . . .  C ADDR   1FA0H   A   
+CO_RAWMIN. . . . .  C ADDR   1FD0H   A   
+CO_RELEASE . . . .  C ADDR   1F70H   A   
+CO_SENSITIVITY . .  C ADDR   1F80H   A   
+CO_SKUCNT. . . . .  C ADDR   1F49H   A   
+CO_SKWKCNT . . . .  C ADDR   1F3AH   A   
+CO_TKCON . . . . .  C ADDR   1F37H   A   
+CO_TKDC. . . . . .  C ADDR   1F41H   A   
+CO_TKEN0 . . . . .  C ADDR   1F34H   A   
+CO_TKEN1 . . . . .  C ADDR   1F35H   A   
+CO_TKFC0 . . . . .  C ADDR   1F42H   A   
+CO_TKFC1 . . . . .  C ADDR   1F43H   A   
+CO_TKFC2 . . . . .  C ADDR   1F45H   A   
+CO_TKFC3 . . . . .  C ADDR   1F46H   A   
+CO_TKFC4 . . . . .  C ADDR   1F44H   A   
+CO_TKPSSR. . . . .  C ADDR   1F39H   A   
+CO_TKRVC . . . . .  C ADDR   1F40H   A   
+CO_TKSW. . . . . .  C ADDR   1F38H   A   
+CO_WKTKEN0 . . . .  C ADDR   1F3CH   A   
+CO_WKTKEN1 . . . .  C ADDR   1F3DH   A   
+_TOUCH_INITROM . .  C ADDR   1F30H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

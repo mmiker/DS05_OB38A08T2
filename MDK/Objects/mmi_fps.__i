@@ -1,0 +1,1 @@
+"..\mmi_src\mmi_fps.c" LARGE OPTIMIZE (8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc;..\dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\mmi_fps.lst) TABS (2) OBJECT(.\Objects\mmi_fps.obj)

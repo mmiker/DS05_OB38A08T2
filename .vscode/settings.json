@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "fps.h": "c",
+        "dqiot_fp_sy.h": "c",
+        "dq_project.h": "c",
+        "mmi_fps.h": "c",
+        "string.h": "c",
+        "bsp.h": "c",
+        "audio.h": "c",
+        "ob38a08t2.h": "c",
+        "adc.h": "c"
+    }
+}
