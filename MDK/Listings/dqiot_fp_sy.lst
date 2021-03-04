@@ -1,10 +1,10 @@
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 1   
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DQIOT_FP_SY
 OBJECT MODULE PLACED IN .\Objects\dqiot_fp_sy.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\dqiot_src\dqiot_fp_sy.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;
-                    -..\mmi_inc;..\dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\dqiot_fp_sy.lst) TABS(2) OBJECT(.\Objects\dqiot_fp_sy.obj)
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\dqiot_fp_sy.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi
+                    -_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\dqiot_fp_sy.lst) TABS(2) OBJECT(.\Objects\dqiot_fp_sy.obj)
 
 line level    source
 
@@ -12,11 +12,11 @@ line level    source
    2          //#if defined (__PREIPHERAL_FP_SY_SUPPORT__)
    3          //#include "string.h"
    4          #include "dqiot_fp_sy.h"
-   5          // #include "dqiot_drv.h"
-   6          #include "OB38A08T2.h"
-   7          #include "fps.h"
+   5          #include "delay.h"
+   6          #include "dqiot_drv.h"
+   7          #include "OB38A08T2.h"
    8          #include "UART0.h"
-   9          #include "Timer.h"
+   9          
   10          
   11          //unsigned long fp_pin_irq_mask;
   12          
@@ -31,551 +31,857 @@ line level    source
   21          static FP_COLOR_E Light_Color = FP_NONE_COLOR;
   22          //static unsigned char ps_start_flag = 0;
   23          
-  24          extern unsigned char UART0_RXBUF[];
-  25          extern unsigned char UART0_RXLEN;
-  26          
-  27          //unsigned short  ReceiveInfo( unsigned char *rec_data);
-  28          //void AS608_log(void);
+  24          // extern unsigned char uart_get_buf[];
+  25          // extern unsigned char uart_getbuflen;
+  26          extern unsigned char UART0_RXBUF[];
+  27          extern unsigned char UART0_RXLEN;
+  28          
   29          
-  30          //void fp_set_irq_handle(fp_irq_handle_callback cb)
-  31          //{
-  32          //  fp_callback_handle = cb;
-  33          //}
-  34          
-  35          //void fp_set_uart_handle(fp_uart_handle_callback cb)
-  36          //{
-  37          //  fp_uart_handle = cb;
-  38          //}
-  39          
-  40          ///FP_TYPE fp_get_type(void)
-  41          //{
-  42          //  return fp_flag;
+  30          
+  31          //unsigned short  ReceiveInfo( unsigned char *rec_data);
+  32          //void AS608_log(void);
+  33          
+  34          //void fp_set_irq_handle(fp_irq_handle_callback cb)
+  35          //{
+  36          //  fp_callback_handle = cb;
+  37          //}
+  38          
+  39          //void fp_set_uart_handle(fp_uart_handle_callback cb)
+  40          //{
+  41          //  fp_uart_handle = cb;
+  42          //}
   43          
-  44          //}
-  45          
-  46          //--------------------------------------------------------------------------------
-  47          
-  48          //static unsigned char uart_len=0;
-  49          //static unsigned short uart_maxlen = 0;
-  50          //static unsigned char uart_buff[25]={0};
-  51          
-  52          //static void UART_Callback(unsigned char send_data)
-  53          //{
-  54          //  send_data = 0;
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 2   
+  44          
+  45          ///FP_TYPE fp_get_type(void)
+  46          //{
+  47          //  return fp_flag;
+  48          
+  49          //}
+  50          
+  51          //--------------------------------------------------------------------------------
+  52          
+  53          //static unsigned char uart_len=0;
+  54          //static unsigned short uart_maxlen = 0;
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 2   
 
-  55          //}
+  55          //static unsigned char uart_buff[25]={0};
   56          
-  57          //unsigned char fp_GetModeState(void)
+  57          //static void UART_Callback(unsigned char send_data)
   58          //{
-  59          //  return fp_Mode;
+  59          //  send_data = 0;
   60          //}
   61          
-  62          //void fp_SetModeState(unsigned char s)
-  63          //{
-  64          //  fp_Mode = s;
-  65          
-  66          //  if(s == 0)
-  67          //    Light_Color = FP_NONE_COLOR;
-  68          //}
-  69          
-  70          //static void PS_UART_Callback(unsigned char send_data)
-  71          //{
-  72          //  if(send_data == 0x55 )
-  73          //  {
-  74          //    ps_start_flag = 1;
-  75          //  }
-  76          //}
-  77          
-  78          //void FP_PowerOn(void)
-  79          //{
-  80          
-  81          //}
-  82          
-  83          /**
-  84            * @brief  AS608_USART串口向指纹模块传递数据
-  85            * @param  data;传输的数据
-  86            */
-  87          void AS608_SendData(unsigned char send_data)
-  88          {
-  89   1        UART0_TX(send_data);
-  90   1      }
-  91          
-  92          /**
-  93            * @brief  AS608_USART串口向指纹模块命令包头格式 
-  94            * @param  无
-  95            */
-  96          unsigned char AS608_PackHead(void)
-  97          {
-  98   1        /*包头 SendHead*/
-  99   1        AS608_SendData(0xEF);
- 100   1        AS608_SendData(0x01);
- 101   1      
- 102   1        /*指纹模块地址 SendAddr*/
- 103   1        AS608_SendData(AS608_Addr >> 24);
- 104   1        AS608_SendData(AS608_Addr >> 16);
- 105   1        AS608_SendData(AS608_Addr >> 8);
- 106   1        AS608_SendData(AS608_Addr);
- 107   1      
- 108   1        return 0;
- 109   1      }
- 110          
- 111          /**
- 112            * @brief  发送包标识
- 113            * @param  flag:包标标志
- 114            * @retval 无
- 115            */
- 116          void SendFlag(unsigned char flag)
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 3   
+  62          
+  63          //unsigned char fp_GetModeState(void)
+  64          //{
+  65          //  return fp_Mode;
+  66          //}
+  67          
+  68          //void fp_SetModeState(unsigned char s)
+  69          //{
+  70          //  fp_Mode = s;
+  71            
+  72          //  if(s == 0)  
+  73          //    Light_Color = FP_NONE_COLOR;
+  74          //}
+  75          
+  76          //static void PS_UART_Callback(unsigned char send_data)
+  77          //{
+  78          //  if(send_data == 0x55 )
+  79          //  {
+  80          //    ps_start_flag = 1;
+  81          //  }
+  82          //}
+  83          
+  84          //void FP_PowerOn(void)
+  85          //{
+  86          
+  87          //}
+  88          
+  89          /**
+  90            * @brief  AS608_USART串口向指纹模块传递数据 
+  91            * @param  data;传输的数据
+  92            */
+  93          void AS608_SendData(unsigned char send_data)
+  94          {
+  95   1        // uart_tx_byte(UART0, send_data);
+  96   1        UART0_TX(send_data);
+  97   1      }
+  98          
+  99          
+ 100          /**
+ 101            * @brief  AS608_USART串口向指纹模块命令包头格式 
+ 102            * @param  无
+ 103            */
+ 104          unsigned char AS608_PackHead(void)
+ 105          { 
+ 106   1      
+ 107   1        //unsigned char delay_times = 30;
+ 108   1        
+ 109   1        //while(ps_start_flag==0&&delay_times>0)
+ 110   1        //{
+ 111   1        //  delay_times--;
+ 112   1        //}
+ 113   1        //if(ps_start_flag == 0)
+ 114   1        //{
+ 115   1        //  return 1;
+ 116   1        //}
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 3   
 
- 117          {
- 118   1        AS608_SendData(flag);
- 119   1      }
- 120          
- 121          /**
- 122            * @brief  发送包长度
- 123            * @param  length:包长度
- 124            * @retval 无
- 125            */
- 126          void SendLength(unsigned short length)
- 127          {
- 128   1        AS608_SendData(length >> 8);
- 129   1        AS608_SendData(length);
- 130   1      }
- 131          
- 132          /**
- 133            * @brief  发送指令码
- 134            * @param  cmd;指令码
- 135            * @retval 无
- 136            */
- 137          void Sendcmd(unsigned char cmd)
- 138          {
- 139   1        AS608_SendData(cmd);
- 140   1      }
- 141          
- 142          /**
- 143            * @brief  发送校验和
- 144            * @param  check:检查位
- 145            * @retval 无
- 146            */
- 147          void SendCheck(unsigned short check)
- 148          {
- 149   1        AS608_SendData(check >> 8);
- 150   1        AS608_SendData(check);
- 151   1      }
- 152          
- 153          /**
- 154            * @brief  判断中断接收的数组有没有应答包
- 155            * @param  
- 156            * waittime为等待中断接收数据的时间(单位1ms)
- 157            * length为包长度
- 158            * @return 数据包确认码
- 159            * @note   1 failed
- 160            * @see    none
- 161            */
- 162          static u8 JudgeStr(u16 waittime, u8 length)
- 163          {
- 164   1        // u8 getdata;
- 165   1        u8 i = 0, j = 0;
- 166   1      
- 167   1        while (--waittime)
- 168   1        {
- 169   2          // delay_ms(1);
- 170   2          TIMER1_Delay(1);
- 171   2      
- 172   2          /* 接收到一次数据 */
- 173   2          if (UART0_RXLEN >= 9 + length)
- 174   2          {
- 175   3            /* 寻找0xEF位置 */
- 176   3            for (i = 0; i < UART0_RXLEN; i++)
- 177   3            {
- 178   4              if (UART0_RXBUF[i] == 0xEF && UART0_RXBUF[i + 1] == 0x01)
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 4   
+ 117   1        //else if(ps_start_flag == 1)
+ 118   1        //{
+ 119   1        //  uart_init_block();
+ 120   1        //  ps_start_flag = 2;
+ 121   1        //}
+ 122   1      
+ 123   1        /*包头 SendHead*/
+ 124   1        AS608_SendData(0xEF);
+ 125   1        AS608_SendData(0x01);
+ 126   1      
+ 127   1        /*指纹模块地址 SendAddr*/
+ 128   1        AS608_SendData(AS608_Addr >> 24);
+ 129   1        AS608_SendData(AS608_Addr >> 16);
+ 130   1        AS608_SendData(AS608_Addr >> 8);
+ 131   1        AS608_SendData(AS608_Addr);
+ 132   1      
+ 133   1        return 0;
+ 134   1      }
+ 135          
+ 136          unsigned char AS608_PackHead2(void)
+ 137          {
+ 138   1      
+ 139   1        /*包头 SendHead*/
+ 140   1        AS608_SendData(0xEF);
+ 141   1        AS608_SendData(0x01); 
+ 142   1      
+ 143   1        /*指纹模块地址*/
+ 144   1        AS608_SendData(AS608_Addr>>24);
+ 145   1        AS608_SendData(AS608_Addr>>16); 
+ 146   1        AS608_SendData(AS608_Addr>>8);
+ 147   1        AS608_SendData(AS608_Addr); 
+ 148   1      
+ 149   1        return 0;
+ 150   1      }
+ 151          
+ 152          /**
+ 153            * @brief  发送包标识
+ 154            * @param  flag:包标识位
+ 155            * @retval 无
+ 156            */
+ 157           void SendFlag(unsigned char flag)
+ 158          {
+ 159   1        AS608_SendData(flag);
+ 160   1      }
+ 161          
+ 162          
+ 163          /**
+ 164            * @brief  发送包长度
+ 165            * @param  length:包长度
+ 166            * @retval 无
+ 167            */
+ 168           void SendLength(unsigned short length)
+ 169          {
+ 170   1        AS608_SendData(length>>8);
+ 171   1        AS608_SendData(length);
+ 172   1      }
+ 173          
+ 174          
+ 175          /**
+ 176            * @brief  发送指令码
+ 177            * @param  cmd;指令码
+ 178            * @retval 无
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 4   
 
- 179   4                break;
- 180   4            }
- 181   3      
- 182   3            /* 判断是否为应答包 */
- 183   3            if (UART0_RXBUF[i] == 0xEF && UART0_RXBUF[i + 1] == 0x01 && UART0_RXBUF[i + 6] == 0x07 && ((UART0_RXBUF
+ 179            */
+ 180          void Sendcmd(unsigned char cmd)
+ 181          {
+ 182   1        AS608_SendData(cmd);
+ 183   1      }
+ 184          
+ 185          
+ 186          /**
+ 187            * @brief  发送校验和
+ 188            * @param  check:检查位
+ 189            * @retval 无
+ 190            */
+ 191           void SendCheck(unsigned short check)
+ 192          {
+ 193   1        AS608_SendData(check>>8);
+ 194   1        AS608_SendData(check);
+ 195   1      }
+ 196          
+ 197          /**
+ 198            * @brief  判断中断接收的数组有没有应答包
+ 199            * @param  
+ 200            * waittime为等待中断接收数据的时间(单位1ms)
+ 201            * length为包长度
+ 202            * @return 数据包确认码
+ 203            * @note   1 failed
+ 204            * @see    none
+ 205            */
+ 206          static unsigned char JudgeStr(unsigned int waittime, unsigned char length)
+ 207          {
+ 208   1        unsigned char i = 0,j = 0;
+ 209   1        //u8 str[8];
+ 210   1        //str[0] = 0xEF;
+ 211   1        //str[1] = 0x01;
+ 212   1        //str[2] = AS608_Addr >> 24;
+ 213   1        //str[3] = AS608_Addr >> 16;
+ 214   1        //str[4] = AS608_Addr >> 8;
+ 215   1        //str[5] = AS608_Addr;
+ 216   1        //str[6] = 0x07;
+ 217   1      
+ 218   1        while (--waittime)
+ 219   1        {
+ 220   2          delay_ms(1);
+ 221   2      
+ 222   2          /* 接收到一次数据 */
+ 223   2          if (UART0_RXLEN >= 9 + length)
+ 224   2          {
+ 225   3            /* 寻找0xEF位置 */
+ 226   3            for (i = 0; i < UART0_RXLEN; i++)
+ 227   3            {
+ 228   4              if (UART0_RXBUF[i] == 0xEF)
+ 229   4                break;
+ 230   4            }
+ 231   3      
+ 232   3            /* 判断是否为应答包 */
+ 233   3            if (UART0_RXBUF[i] == 0xEF && UART0_RXBUF[i + 1] == 0x01 && UART0_RXBUF[i + 6] == 0x07 && ((UART0_RXBUF
              -[i + 7] << 8) + UART0_RXBUF[i + 8]) == length)
- 184   3            {
- 185   4              for (i; i < UART0_RXLEN; i++)
- 186   4              {
- 187   5                uart_rec_buff[j] = UART0_RXBUF[i];
- 188   5                j++;
- 189   5              }
- 190   4              // getdata = uart_rec_buff[9]; //确认码
- 191   4      
- 192   4              /* 清空缓存 */
- 193   4              UART0_RXLEN = 0;
- 194   4      
- 195   4              return uart_rec_buff[9]; //确认码
- 196   4            }
- 197   3          }
- 198   2        }
- 199   1      
- 200   1        return 1;
- 201   1      }
- 202          
- 203          unsigned char PS_GetEcho(void)
- 204          {
- 205   1        AS608_PackHead();
- 206   1        SendFlag(0x01);
- 207   1        SendLength(0x03);
- 208   1        Sendcmd(0x53); /*生成特征指令*/
- 209   1        SendCheck(0x57);
- 210   1      
- 211   1        return JudgeStr(1000, 0x03);
- 212   1      }
- 213          
- 214          //录入图像 PS_GetImage
- 215          //功能:探测手指，探测到后录入指纹图像存于ImageBuffer。
- 216          //模块返回确认字
- 217          unsigned char PS_GetImage(void)
- 218          {
- 219   1        /* 清空缓存 */
- 220   1        UART0_RXLEN = 0;
- 221   1      
- 222   1        //delay_ms(300);
- 223   1        if (AS608_PackHead() == 1)
- 224   1          return 0xFF;
- 225   1        SendFlag(0x01); /*命令包标识*/
- 226   1        SendLength(0x03);
- 227   1        Sendcmd(0x01); /*录指纹指令*/
- 228   1        SendCheck(0x01 + 0x03 + 0x01);
- 229   1      
- 230   1        // nrf_delay_ms(50); /*等待指纹识别模块处理数据*/
- 231   1      
- 232   1        return JudgeStr(1000, 0x03);
- 233   1      }
- 234          
- 235          //生成特征 PS_GenChar
- 236          //功能:将ImageBuffer中的原始图像生成指纹特征文件存于CharBuffer1或CharBuffer2
- 237          //参数:BufferID --> charBuffer1:0x01  charBuffer1:0x02
- 238          //模块返回确认字
- 239          unsigned char PS_GenChar(unsigned char BufferID)
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 5   
+ 234   3            {
+ 235   4              for (i; i < UART0_RXLEN; i++)
+ 236   4              {
+ 237   5                uart_rec_buff[j] = UART0_RXBUF[i];
+ 238   5                j++;
+ 239   5              }
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 5   
 
- 240          {
- 241   1        if (AS608_PackHead() == 1)
- 242   1          return 0xFF;
- 243   1        SendFlag(0x01);
- 244   1        SendLength(0x04);
- 245   1        Sendcmd(0x02); /*生成特征指令*/
- 246   1        AS608_SendData(BufferID);
- 247   1        SendCheck(0x01 + 0x04 + 0x02 + BufferID);
- 248   1        //  mmi_dq_log_wakeup_count();
+ 240   4              // getdata = uart_rec_buff[9]; //确认码
+ 241   4      
+ 242   4              /* 清空缓存 */
+ 243   4              UART0_RXLEN = 0;
+ 244   4      
+ 245   4              return uart_rec_buff[9]; //确认码
+ 246   4            }
+ 247   3          }
+ 248   2        }
  249   1      
- 250   1        return JudgeStr(1000, 0x03);
+ 250   1        return 1;
  251   1      }
  252          
- 253          //精确比对两枚指纹特征 PS_Match
- 254          //功能:精确比对CharBuffer1 与CharBuffer2 中的特征文件
- 255          //模块返回确认字
- 256          unsigned char PS_Match(void)
- 257          {
- 258   1        if (AS608_PackHead() == 1)
- 259   1          return 0xFF;
- 260   1        SendFlag(0x01);
- 261   1        SendLength(0x03);
- 262   1        Sendcmd(0x03); /*精确比对指令*/
- 263   1        SendCheck(0x01 + 0x03 + 0x03);
- 264   1      
- 265   1        return JudgeStr(1000, 0x05);
- 266   1      }
- 267          
- 268          //合并特征（生成模板）PS_RegModel
- 269          //功能:将CharBuffer1与CharBuffer2中的特征文件合并生成 模板,结果存于CharBuffer1与CharB
+ 253          #if 0
+              /**
+                * @brief  从缓冲区读出确认码
+                * @param  *i:返回值（确认码）
+                * @retval 无
+                */
+              unsigned char  ReturnFlag( unsigned char *i)
+              { 
+                *i = ReceiveInfo(uart_rec_buff);
+                return *i;
+              }
+              
+              unsigned char  ReceiveInfo( unsigned char *rec_data)
+              {
+                unsigned char *temp_data;
+                unsigned short rev_length = 0;
+                unsigned char error = 0;
+                unsigned char a = 9;
+              
+                memset(uart_rec_buff,0,sizeof(uart_rec_buff));
+              
+                do
+                {
+                  //error = nrf_drv_uart_rx(rec_data,1);
+                  //if(error == NRF_ERROR_INTERNAL)
+                  //  return 0xFF;
+                  if(rec_data[0] == 0xEF)
+                    break;
+                  if(a==0)
+                    return 0xFF;
+                }while(a--);
+                
+              
+                rev_length = (rec_data[7]<<8)+rec_data[8];
+                temp_data = rec_data+9;
+              
+                if(rev_length!=0)
+                  ;//nrf_drv_uart_rx(temp_data,rev_length);
+                else
+                  return 0xFF;
+              
+                AS608_log();
+                return temp_data[0];
+              }
+              #endif
+ 298          
+ 299          unsigned char PS_GetEcho(void)
+ 300          {
+ 301   1        AS608_PackHead();
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 6   
+
+ 302   1        SendFlag(0x01);          
+ 303   1        SendLength(0x03);
+ 304   1        Sendcmd(0x53);              /*生成特征指令*/   
+ 305   1        SendCheck(0x57);
+ 306   1      
+ 307   1        //sure=ReturnFlag(&p);
+ 308   1        return JudgeStr(1000, 0x03);
+ 309   1      }
+ 310          
+ 311          //录入图像 PS_GetImage
+ 312          //功能:探测手指，探测到后录入指纹图像存于ImageBuffer。
+ 313          //模块返回确认字
+ 314          unsigned char PS_GetImage(void)
+ 315          {
+ 316   1        /* 清空缓存 */
+ 317   1        UART0_RXLEN = 0;
+ 318   1      
+ 319   1        //delay_ms(300);
+ 320   1        if(AS608_PackHead()==1)
+ 321   1          return 0xFF;
+ 322   1        SendFlag(0x01);             /*命令包标识*/
+ 323   1        SendLength(0x03);
+ 324   1        Sendcmd(0x01);              /*录指纹指令*/
+ 325   1        SendCheck(0x01+0x03+0x01);
+ 326   1      
+ 327   1        //nrf_delay_ms(50);        /*等待指纹识别模块处理数据*/
+ 328   1      
+ 329   1        // sure = ReturnFlag(&p);
+ 330   1        return JudgeStr(1000, 0x03);
+ 331   1      }
+ 332          
+ 333          
+ 334          //生成特征 PS_GenChar
+ 335          //功能:将ImageBuffer中的原始图像生成指纹特征文件存于CharBuffer1或CharBuffer2
+ 336          //参数:BufferID --> charBuffer1:0x01  charBuffer1:0x02
+ 337          //模块返回确认字
+ 338          unsigned char PS_GenChar(unsigned char BufferID)
+ 339          {
+ 340   1        if(AS608_PackHead()==1)
+ 341   1          return 0xFF;
+ 342   1        SendFlag(0x01);          
+ 343   1        SendLength(0x04);
+ 344   1        Sendcmd(0x02);              /*生成特征指令*/   
+ 345   1        AS608_SendData(BufferID);
+ 346   1        SendCheck(0x01+0x04+0x02+BufferID);
+ 347   1        return JudgeStr(1000, 0x03);
+ 348   1      
+ 349   1      }
+ 350          
+ 351          //精确比对两枚指纹特征 PS_Match
+ 352          //功能:精确比对CharBuffer1 与CharBuffer2 中的特征文件
+ 353          //模块返回确认字
+ 354          unsigned char PS_Match(void)
+ 355          {
+ 356   1        if(AS608_PackHead()==1)
+ 357   1          return 0xFF;
+ 358   1        SendFlag(0x01);
+ 359   1        SendLength(0x03);
+ 360   1        Sendcmd(0x03);                /*精确比对指令*/
+ 361   1        SendCheck(0x01+0x03+0x03);
+ 362   1        
+ 363   1        // sure = ReturnFlag(&p);
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 7   
+
+ 364   1        return JudgeStr(1000, 0x05);
+ 365   1      }
+ 366          //搜索指纹 PS_Search
+ 367          //功能:以CharBuffer1或CharBuffer2中的特征文件搜索整个或部分指纹库.若搜索到，则�
+             -�回页码。
+ 368          //参数:  BufferID @ref CharBuffer1  CharBuffer2
+ 369          //说明:  模块返回确认字，页码（相配指纹模板）
+ 370          unsigned char PS_Search(unsigned char BufferID,unsigned short StartPage,unsigned short PageNum,unsigned sh
+             -ort *p)
+ 371          {
+ 372   1        
+ 373   1        unsigned char  sure;
+ 374   1        if(AS608_PackHead()==1)
+ 375   1          return 0xFF;
+ 376   1        SendFlag(0x01); //命令包标识
+ 377   1        SendLength(0x08);
+ 378   1        Sendcmd(0x04);
+ 379   1        AS608_SendData(BufferID);
+ 380   1        AS608_SendData(StartPage>>8);
+ 381   1        AS608_SendData(StartPage);
+ 382   1        AS608_SendData(PageNum>>8);
+ 383   1        AS608_SendData(PageNum);
+ 384   1        SendCheck(0x01+0x08+0x04+BufferID+(StartPage>>8)+(unsigned char)StartPage+(PageNum>>8)+(unsigned char)Pag
+             -eNum);
+ 385   1        sure = JudgeStr(1000, 0x07);
+ 386   1        *p=(uart_rec_buff[10]<<8)+uart_rec_buff[11];
+ 387   1        return sure;  
+ 388   1      }
+ 389          
+ 390          //合并特征（生成模板）PS_RegModel
+ 391          //功能:将CharBuffer1与CharBuffer2中的特征文件合并生成 模板,结果存于CharBuffer1与CharB
              -uffer2
- 270          //说明:  模块返回确认字
- 271          unsigned char PS_RegModel(void)
- 272          {
- 273   1        if (AS608_PackHead() == 1)
- 274   1          return 0xFF;
- 275   1        SendFlag(0x01);
- 276   1        SendLength(0x03);
- 277   1        Sendcmd(0x05); /*合并特征指令*/
- 278   1        SendCheck(0x01 + 0x03 + 0x05);
- 279   1      
- 280   1        return JudgeStr(1000, 0x03);
- 281   1      }
- 282          
- 283          //储存模板 PS_StoreChar
- 284          //功能:将 CharBuffer1 或 CharBuffer2 中的模板文件存到 PageID 号flash数据库位置。
- 285          //参数:  BufferID @ref charBuffer1:0x01 charBuffer1:0x02
- 286          //       PageID（指纹库位置号）
- 287          //说明:  模块返回确认字
- 288          unsigned char PS_StoreChar(unsigned char BufferID, unsigned short PageID)
- 289          {
- 290   1        if (AS608_PackHead() == 1)
- 291   1          return 0xFF;
- 292   1        SendFlag(0x01);
- 293   1        SendLength(0x06);
- 294   1        Sendcmd(0x06); /*存储模板指令*/
- 295   1        AS608_SendData(BufferID);
- 296   1        AS608_SendData(PageID >> 8);
- 297   1        AS608_SendData(PageID);
- 298   1        SendCheck(0x01 + 0x06 + 0x06 + BufferID + (PageID >> 8) + (unsigned char)PageID);
- 299   1      
- 300   1        return JudgeStr(1000, 0x03);;
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 6   
+ 392          //说明:  模块返回确认字
+ 393          unsigned char PS_RegModel(void)
+ 394          {   
+ 395   1        if(AS608_PackHead()==1)
+ 396   1          return 0xFF;
+ 397   1        SendFlag(0x01);
+ 398   1        SendLength(0x03);
+ 399   1        Sendcmd(0x05);                /*合并特征指令*/
+ 400   1        SendCheck(0x01+0x03+0x05);
+ 401   1      
+ 402   1        // sure = ReturnFlag(&p);
+ 403   1        return JudgeStr(1000, 0x03);
+ 404   1      }
+ 405          
+ 406          //储存模板 PS_StoreChar
+ 407          //功能:将 CharBuffer1 或 CharBuffer2 中的模板文件存到 PageID 号flash数据库位置。
+ 408          //参数:  BufferID @ref charBuffer1:0x01 charBuffer1:0x02
+ 409          //       PageID（指纹库位置号）
+ 410          //说明:  模块返回确认字
+ 411          unsigned char PS_StoreChar(unsigned char BufferID, unsigned short PageID)
+ 412          {
+ 413   1        if (AS608_PackHead() == 1)
+ 414   1          return 0xFF;
+ 415   1        SendFlag(0x01);
+ 416   1        SendLength(0x06);
+ 417   1        Sendcmd(0x06);                /*存储模板指令*/
+ 418   1        AS608_SendData(BufferID);
+ 419   1          AS608_SendData(PageID>>8);
+ 420   1        AS608_SendData(PageID);
+ 421   1        SendCheck(0x01+0x06+0x06+BufferID+(PageID>>8)+(unsigned char)PageID);
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 8   
 
- 301   1      }
- 302          
- 303          //删除模板 PS_DeletChar
- 304          //功能:  删除flash数据库中指定ID号开始的N个指纹模板
- 305          //参数:  PageID(指纹库模板号)，N删除的模板个数。
- 306          //说明:  模块返回确认字
- 307          unsigned char PS_DeletChar(unsigned short PageID, unsigned short N)
- 308          {
- 309   1        if (AS608_PackHead() == 1)
- 310   1          return 0xFF;
- 311   1        SendFlag(0x01); //命令包标识
- 312   1        SendLength(0x07);
- 313   1        Sendcmd(0x0C); /*删除指定指纹模板指令*/
- 314   1        AS608_SendData(PageID >> 8);
- 315   1        AS608_SendData(PageID);
- 316   1        AS608_SendData(N >> 8);
- 317   1        AS608_SendData(N);
- 318   1        SendCheck(0x01 + 0x07 + 0x0C + (PageID >> 8) + (unsigned char)PageID + (N >> 8) + (unsigned char)N);
- 319   1      
- 320   1        //AS608_DELAY_MS(400);
- 321   1      
- 322   1        return JudgeStr(1000, 0x03);
- 323   1      }
- 324          
- 325          //高速搜索PS_HighSpeedSearch
- 326          //功能：以 CharBuffer1或CharBuffer2中的特征文件高速搜索整个或部分指纹库。
- 327          //      若搜索到，则返回页码,该指令对于的确存在于指纹库中 ，且登录时质量
- 328          //      很好的指纹，会很快给出搜索结果。
- 329          //参数:  BufferID， StartPage(起始页)，PageNum（页数）
- 330          //说明:  模块返回确认字+页码（相配指纹模板）
- 331          unsigned char PS_HighSpeedSearch(unsigned char BufferID, unsigned short StartPage, unsigned short PageNum,
+ 422   1      
+ 423   1        return JudgeStr(1000, 0x03);
+ 424   1      }
+ 425          
+ 426          //删除模板 PS_DeletChar
+ 427          //功能:  删除flash数据库中指定ID号开始的N个指纹模板
+ 428          //参数:  PageID(指纹库模板号)，N删除的模板个数。
+ 429          //说明:  模块返回确认字
+ 430          unsigned char PS_DeletChar(unsigned short PageID, unsigned short N)
+ 431          {
+ 432   1        if (AS608_PackHead() == 1)
+ 433   1          return 0xFF;
+ 434   1        SendFlag(0x01);//命令包标识
+ 435   1        SendLength(0x07);
+ 436   1        Sendcmd(0x0C);                /*删除指定指纹模板指令*/
+ 437   1        AS608_SendData(PageID>>8);
+ 438   1          AS608_SendData(PageID);
+ 439   1        AS608_SendData(N>>8);
+ 440   1        AS608_SendData(N);
+ 441   1        SendCheck(0x01+0x07+0x0C+(PageID>>8)+(unsigned char)PageID+(N>>8)+(unsigned char)N);
+ 442   1        
+ 443   1        //AS608_DELAY_MS(400);
+ 444   1        
+ 445   1        // sure = ReturnFlag(&p);
+ 446   1        return JudgeStr(1000, 0x03);  
+ 447   1      }
+ 448          
+ 449          //高速搜索PS_HighSpeedSearch
+ 450          //功能：以 CharBuffer1或CharBuffer2中的特征文件高速搜索整个或部分指纹库。
+ 451          //      若搜索到，则返回页码,该指令对于的确存在于指纹库中 ，且登录时质量
+ 452          //      很好的指纹，会很快给出搜索结果。
+ 453          //参数:  BufferID， StartPage(起始页)，PageNum（页数）
+ 454          //说明:  模块返回确认字+页码（相配指纹模板）
+ 455          unsigned char PS_HighSpeedSearch(unsigned char BufferID, unsigned short StartPage, unsigned short PageNum,
              - unsigned short *p)
- 332          {
- 333   1        unsigned char ensure;
- 334   1      
- 335   1        if (AS608_PackHead() == 1)
- 336   1          return 0xFF;
- 337   1        SendFlag(0x01);
- 338   1        SendLength(0x08);
- 339   1        Sendcmd(0x1b); /*高速搜索指纹库指令*/
- 340   1        AS608_SendData(BufferID);
- 341   1        AS608_SendData(StartPage >> 8);
- 342   1        AS608_SendData(StartPage);
- 343   1        AS608_SendData(PageNum >> 8);
- 344   1        AS608_SendData(PageNum);
- 345   1        SendCheck(0x01 + 0x08 + 0x1b + BufferID + (StartPage >> 8) + (unsigned char)StartPage + (PageNum >> 8) + 
-             -(unsigned char)PageNum);
- 346   1      
- 347   1        // ensure = ReturnFlag(&rc);
- 348   1        ensure = JudgeStr(1000, 0x07);
- 349   1      
- 350   1        *p = (uart_rec_buff[10] << 8) + uart_rec_buff[11]; //模板号
- 351   1      
- 352   1        return ensure;
- 353   1      }
- 354          
- 355          //清空指纹库 PS_Empty
- 356          //功能:  删除flash数据库中所有指纹模板
- 357          //参数:  无
- 358          //说明:  模块返回确认字
- 359          unsigned char PS_Empty(void)
- 360          {
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 7   
+ 456          {
+ 457   1          unsigned char ensure;
+ 458   1      
+ 459   1        if(AS608_PackHead()==1)
+ 460   1          return 0xFF;
+ 461   1        SendFlag(0x01);
+ 462   1        SendLength(0x08);
+ 463   1        Sendcmd(0x1b);                 /*高速搜索指纹库指令*/
+ 464   1        AS608_SendData(BufferID);
+ 465   1        AS608_SendData(StartPage>>8);
+ 466   1        AS608_SendData(StartPage);
+ 467   1        AS608_SendData(PageNum>>8);
+ 468   1        AS608_SendData(PageNum);
+ 469   1        SendCheck(0x01+0x08+0x1b+BufferID+(StartPage>>8)+(unsigned char)StartPage+(PageNum>>8)+(unsigned char)Pag
+             -eNum);
+ 470   1      
+ 471   1        // ensure = ReturnFlag(&rc);
+ 472   1        ensure = JudgeStr(1000, 0x07);
+ 473   1      
+ 474   1        *p=(uart_rec_buff[10]<<8)+uart_rec_buff[11];
+ 475   1      
+ 476   1        return ensure;
+ 477   1      }
+ 478          
+ 479          //清空指纹库 PS_Empty
+ 480          //功能:  删除flash数据库中所有指纹模板
+ 481          //参数:  无
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 9   
 
- 361   1        if (AS608_PackHead() == 1)
- 362   1          return 0xFF;
- 363   1        SendFlag(0x01); //命令包标识
- 364   1        SendLength(0x03);
- 365   1        Sendcmd(0x0D);
- 366   1        SendCheck(0x01 + 0x03 + 0x0D);
- 367   1      
- 368   1        return JudgeStr(1000, 0x03);
- 369   1      }
- 370          
- 371          //读有效模板个数 PS_ValidTempleteNum
- 372          //功能：读有效模板个数
- 373          //参数: 无
- 374          //说明: 模块返回确认字+有效模板个数ValidN
- 375          unsigned char PS_ValidTempleteNum(unsigned short *ValidN)
- 376          {
- 377   1        unsigned char ensure;
- 378   1      
- 379   1        if (AS608_PackHead() == 1)
- 380   1          return 0xFF;
- 381   1        SendFlag(0x01); //命令包标识
- 382   1        SendLength(0x03);
- 383   1        Sendcmd(0x1d);
- 384   1        SendCheck(0x01 + 0x03 + 0x1d);
- 385   1      
- 386   1        // ensure = ReturnFlag(&p);
- 387   1        ensure = JudgeStr(1000, 0x05);
- 388   1      
- 389   1        *ValidN = (uart_rec_buff[10] << 8) + uart_rec_buff[11];
- 390   1      
- 391   1        return ensure;
- 392   1      }
- 393          
- 394          //自动注册模板 PS_AutoEnRoll
- 395          //功能：采集一次指纹注册模板，在指纹库中搜索空位并存储，返回存储ID
- 396          //参数: 无
- 397          //说明: 模块返回确认字+页码（相配指纹模板）
- 398          unsigned char PS_AutoEnRoll(unsigned short id, unsigned char num, unsigned short param)
- 399          {
- 400   1        if (AS608_PackHead() == 1)
- 401   1          return 0xFF;
- 402   1        SendFlag(0x01); //命令包标识
- 403   1        SendLength(0x08);
- 404   1        Sendcmd(0x31);
- 405   1        AS608_SendData(id >> 8);
- 406   1        AS608_SendData(id & 0xFF);
- 407   1        AS608_SendData(num);
- 408   1        AS608_SendData(param >> 8);
- 409   1        AS608_SendData(param & 0xFF);
- 410   1        SendCheck(0x01 + 0x08 + 0x31 + (id >> 8) + (id & 0xFF) + num + (param >> 8) + (param & 0xFF));
- 411   1      
- 412   1        return 0;
- 413   1      }
- 414          
- 415          //自动验证指纹 PS_AutoIdentify
- 416          //功能：
- 417          //1.自动采集指纹，在指纹库中搜索目标模板并返回搜索结果。
- 418          //2.如果目标模板同当前采集的指纹比对得分大于最高阀值，并且目标模板为不完
+ 482          //说明:  模块返回确认字
+ 483          unsigned char PS_Empty(void)
+ 484          {
+ 485   1        if(AS608_PackHead()==1)
+ 486   1          return 0xFF;
+ 487   1        SendFlag(0x01);//命令包标识
+ 488   1        SendLength(0x03);
+ 489   1        Sendcmd(0x0D);
+ 490   1        SendCheck(0x01+0x03+0x0D);
+ 491   1        
+ 492   1        // sure = ReturnFlag(&p);
+ 493   1        return JudgeStr(1000, 0x03);
+ 494   1      }
+ 495          
+ 496          #if 0
+              /**
+                * @brief  检查STM32与指纹模块的通信连接
+                * @param  PS_Addr指纹模块地址
+                * @retval 返回值0通讯成功;1表示通讯不成功
+                */
+              unsigned char PS_Connect(unsigned long *PS_Addr)
+              {
+                PS_Addr = 0;
+                if(AS608_PackHead()==1)
+                  return 0xFF;
+                AS608_SendData(0X01);
+                AS608_SendData(0X00);
+                AS608_SendData(0X00);
+                return 1;   
+              }
+              
+              //写系统寄存器 PS_WriteReg
+              //功能:  写模块寄存器
+              //参数:  寄存器序号RegNum:4\5\6
+              //说明:  模块返回确认字
+              unsigned char PS_WriteReg(unsigned char RegNum, unsigned char DATA)
+              {
+                unsigned short temp;
+                unsigned short sure,p=0;
+              
+                if(AS608_PackHead()==1)
+                  return 0xFF;
+                SendFlag(0x01);//鍛戒护鍖呮爣璇
+                SendLength(0x05);
+                Sendcmd(0x0E);
+                AS608_SendData(RegNum);
+                AS608_SendData(DATA);
+                temp = RegNum+DATA+0x01+0x05+0x0E;
+                SendCheck(temp);
+                sure=ReturnFlag(&p);
+                return sure;
+              }
+              //读系统基本参数 PS_ReadSysPara
+              //功能:  读取模块的基本参数（波特率，包大小等)
+              //参数:  无
+              //说明:  模块返回确认字 + 基本参数（16bytes）
+              unsigned char PS_ReadSysPara(void)
+              {
+                unsigned short temp;
+                unsigned char  ensure;
+                unsigned char  *send_data;
+                unsigned short p=0;
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 10  
+
+                
+                if(AS608_PackHead()==1)
+                  return 0xFF;
+                SendFlag(0x01);//鍛戒护鍖呮爣璇
+                SendLength(0x03);
+                Sendcmd(0x0F);
+                temp = 0x01+0x03+0x0F;
+                SendCheck(temp);
+                ensure=ReturnFlag(&p);
+                if(send_data)
+                {
+              
+                }   
+                else
+                  ensure=0xff;
+                if(ensure==0x00)
+                {
+              
+                }
+                return ensure;
+              }
+              //设置模块地址 PS_SetAddr
+              //功能:  设置模块地址
+              //参数:  PS_addr
+              //说明:  模块返回确认字
+              unsigned char PS_SetAddr(unsigned long PS_addr)
+              {
+                unsigned short temp;
+                unsigned char  ensure;
+              
+                if(AS608_PackHead()==1)
+                  return 0xFF;
+                SendFlag(0x01);//命令包标识
+                SendLength(0x07);
+                Sendcmd(0x15);
+                AS608_SendData(PS_addr>>24);
+                AS608_SendData(PS_addr>>16);
+                AS608_SendData(PS_addr>>8);
+                AS608_SendData(PS_addr);
+                temp = 0x01+0x07+0x15
+                +(unsigned char)(PS_addr>>24)+(unsigned char)(PS_addr>>16)
+                +(unsigned char)(PS_addr>>8) +(unsigned char)PS_addr;       
+                SendCheck(temp);
+              
+                return ensure;
+              }
+              //功能： 模块内部为用户开辟了256bytes的FLASH空间用于存用户记事本,
+              //  该记事本逻辑上被分成 16 个页。
+              //参数:  NotePageNum(0~15),Byte32(要写入内容，32个字节)
+              //说明:  模块返回确认字
+              unsigned char PS_WriteNotepad(unsigned char NotePageNum,unsigned char *Byte32)
+              {
+                unsigned short temp;
+                unsigned char  ensure,i;
+                
+                *Byte32 = 0;
+                
+                if(AS608_PackHead()==1)
+                  return 0xFF;
+                SendFlag(0x01); //命令包标识
+                SendLength(36);
+                Sendcmd(0x18);
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 11  
+
+                AS608_SendData(NotePageNum);
+                for(i=0;i<32;i++)
+                {
+                  AS608_SendData(Byte32[i]);
+                  temp += Byte32[i];
+                }
+                temp =0x01+36+0x18+NotePageNum+temp;
+                SendCheck(temp);
+              
+                return ensure;
+              }
+              //读记事PS_ReadNotepad
+              //功能：  读取FLASH用户区的128bytes数据
+              //参数:  NotePageNum(0~15)
+              //说明:  模块返回确认字+用户信息
+              unsigned char PS_ReadNotepad(unsigned char NotePageNum,unsigned char *Byte32)
+              {
+                unsigned short temp;
+                unsigned char  ensure;
+                
+                *Byte32 = 0;
+                
+                if(AS608_PackHead()==1)
+                  return 0xFF;
+                SendFlag(0x01);//命令包标识
+                SendLength(0x04);
+                Sendcmd(0x19);
+                AS608_SendData(NotePageNum);
+                temp = 0x01+0x04+0x19+NotePageNum;
+                SendCheck(temp);
+              
+                return ensure;
+              }
+              #endif
+ 640          
+ 641          //读有效模板个数 PS_ValidTempleteNum
+ 642          //功能：读有效模板个数
+ 643          //参数: 无
+ 644          //说明: 模块返回确认字+有效模板个数ValidN
+ 645          unsigned char PS_ValidTempleteNum(unsigned short *ValidN)
+ 646          {
+ 647   1        unsigned char  ensure;
+ 648   1        
+ 649   1        if(AS608_PackHead()==1)
+ 650   1          return 0xFF;
+ 651   1        SendFlag(0x01); //命令包标识
+ 652   1        SendLength(0x03);
+ 653   1        Sendcmd(0x1d);
+ 654   1        SendCheck(0x01+0x03+0x1d);
+ 655   1      
+ 656   1        // ensure = ReturnFlag(&p);
+ 657   1        ensure = JudgeStr(1000, 0x05);
+ 658   1      
+ 659   1        *ValidN=(uart_rec_buff[10]<<8)+uart_rec_buff[11];
+ 660   1      
+ 661   1        return ensure;
+ 662   1      }
+ 663          
+ 664          unsigned char PS_AutoEnRoll(unsigned short id, unsigned char num, unsigned short param)
+ 665          {
+ 666   1        if(AS608_PackHead()==1)
+ 667   1          return 0xFF;
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 12  
+
+ 668   1        SendFlag(0x01); //命令包标识
+ 669   1        SendLength(0x08);
+ 670   1        Sendcmd(0x31);
+ 671   1        AS608_SendData(id>>8);
+ 672   1        AS608_SendData(id &0xFF);
+ 673   1        AS608_SendData(num);
+ 674   1        AS608_SendData(param>>8);
+ 675   1        AS608_SendData(param&0xFF);
+ 676   1        SendCheck(0x01 + 0x08 + 0x31 + (id>>8) + (id&0xFF) + num + (param>>8) + (param&0xFF));
+ 677   1      
+ 678   1        return 0;
+ 679   1      }
+ 680          
+ 681          //自动验证指纹 PS_AutoIdentify
+ 682          //功能：
+ 683          //1.自动采集指纹，在指纹库中搜索目标模板并返回搜索结果。
+ 684          //2.如果目标模板同当前采集的指纹比对得分大于最高阀值，并且目标模板为不完
              -整特征则以采集的特征更新目标模板的空白区域。
- 419          //参数: 无
- 420          //说明: 模块返回确认字+页码（相配指纹模板）
- 421          unsigned char PS_AutoIdentify(unsigned short id, unsigned char level, unsigned short param)
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 8   
+ 685          //参数: 无
+ 686          //说明: 模块返回确认字+页码（相配指纹模板）
+ 687          unsigned char PS_AutoIdentify(unsigned short id, unsigned char level, unsigned short param)
+ 688          {
+ 689   1        if(AS608_PackHead()==1)
+ 690   1          return 0xFF;
+ 691   1        SendFlag(0x01); //命令包标识
+ 692   1        SendLength(0x08);
+ 693   1        Sendcmd(0x32);
+ 694   1        AS608_SendData(level);
+ 695   1        AS608_SendData(id>>8);
+ 696   1        AS608_SendData(id &0xFF);
+ 697   1        AS608_SendData(param>>8);
+ 698   1        AS608_SendData(param&0xFF);
+ 699   1        SendCheck(0x01 + 0x08 + 0x32 + (id>>8) + (id&0xFF) + level + (param>>8) + (param&0xFF));
+ 700   1      
+ 701   1        return 0;
+ 702   1      
+ 703   1      }
+ 704          
+ 705          //与AS608握手 PS_HandShake
+ 706          //参数: PS_Addr地址指针
+ 707          //说明: 模块返新地址（正确地址）
+ 708          unsigned char PS_HandShake(unsigned long *PS_Addr)
+ 709          {
+ 710   1        *PS_Addr = 0;
+ 711   1      
+ 712   1        if (AS608_PackHead() == 1)
+ 713   1          return 0xFF;
+ 714   1        SendFlag(0x01);
+ 715   1        SendLength(0x03);
+ 716   1        Sendcmd(0x53);
+ 717   1        SendCheck(0x57);
+ 718   1        
+ 719   1        return JudgeStr(1000, 0x03);
+ 720   1      }
+ 721          
+ 722          unsigned char PS_Reset(void)
+ 723          {
+ 724   1          return 0;
+ 725   1      }
+ 726          
+ 727          
+ 728          unsigned char PS_Sleep(void)
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 13  
 
- 422          {
- 423   1        if (AS608_PackHead() == 1)
- 424   1          return 0xFF;
- 425   1        SendFlag(0x01); //命令包标识
- 426   1        SendLength(0x08);
- 427   1        Sendcmd(0x32);
- 428   1        AS608_SendData(level);
- 429   1        AS608_SendData(id >> 8);
- 430   1        AS608_SendData(id & 0xFF);
- 431   1        AS608_SendData(param >> 8);
- 432   1        AS608_SendData(param & 0xFF);
- 433   1        SendCheck(0x01 + 0x08 + 0x32 + (id >> 8) + (id & 0xFF) + level + (param >> 8) + (param & 0xFF));
- 434   1      
- 435   1        return 0;
- 436   1      }
- 437          
- 438          //与AS608握手 PS_HandShake
- 439          //参数: PS_Addr地址指针
- 440          //说明: 模块返新地址（正确地址） 返回确认码
- 441          unsigned char PS_HandShake(unsigned long *PS_Addr)
- 442          {
- 443   1        *PS_Addr = 0;
- 444   1      
- 445   1        if (AS608_PackHead() == 1)
- 446   1          return 0xFF;
- 447   1      
- 448   1        SendFlag(0x01);
- 449   1        SendLength(0x07);
- 450   1        Sendcmd(0x13);
- 451   1        AS608_SendData(0x00);
- 452   1        AS608_SendData(0x00);
- 453   1        AS608_SendData(0x00);
- 454   1        AS608_SendData(0x00);
- 455   1        SendCheck(0x1B);
- 456   1      
- 457   1        return 0;
- 458   1      }
- 459          
- 460          unsigned char PS_Reset(void)
- 461          {
- 462   1        return 0;
- 463   1      }
- 464          
- 465          unsigned char PS_Sleep(void)
- 466          {
- 467   1        unsigned char ensure;
- 468   1      
- 469   1        if (AS608_PackHead() == 1)
- 470   1          return 0xFF;
- 471   1        SendFlag(0x01); //命令包标识
- 472   1        SendLength(0x03);
- 473   1        Sendcmd(0x60);
- 474   1        SendCheck(0x01 + 0x03 + 0x60);
- 475   1        return ensure;
- 476   1      }
- 477          
- 478          void FP_Light(FP_COLOR_E light_id)
- 479          {
- 480   1        //  if(fp_flag == FP_LT5X)
- 481   1        //  {
- 482   1        //#ifdef __FP_LT5X_LIGHT_SUPPORT__
- 483   1        unsigned short temp;
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 9   
+ 729          { 
+ 730   1        if(AS608_PackHead()==1)
+ 731   1          return 0xFF;
+ 732   1        SendFlag(0x01); //命令包标识
+ 733   1        SendLength(0x03);
+ 734   1        Sendcmd(0x60);
+ 735   1        SendCheck(0x01+0x03+0x60);
+ 736   1        return 0;
+ 737   1      }
+ 738          
+ 739          //void AS608_log(void)
+ 740          //{
+ 741          //  unsigned char i =0;
+ 742          ////  NRF_LOG_PRINTF_DEBUG("receive :");
+ 743          //  for(i=0;i<25;i++)
+ 744          //  {
+ 745          //    NRF_LOG_PRINTF_DEBUG("%2x ",as608_rec_buff[i]);
+ 746          //  }
+ 747          //  NRF_LOG_PRINTF_DEBUG("\n");
+ 748          //}
+ 749          
+ 750          void FP_Light(FP_COLOR_E light_id)
+ 751          {
+ 752   1      //  if(fp_flag == FP_LT5X)
+ 753   1      //  {
+ 754   1      //#ifdef __FP_LT5X_LIGHT_SUPPORT__
+ 755   1          unsigned short temp;
+ 756   1      
+ 757   1          unsigned char  sure = 0;//,p=0;
+ 758   1          if(light_id == Light_Color)
+ 759   1            return;
+ 760   1      
+ 761   1          if(AS608_PackHead()==1)
+ 762   1            return;
+ 763   1          SendFlag(0x01);          
+ 764   1          SendLength(0x07);
+ 765   1          Sendcmd(0x41); 
+ 766   1          switch(light_id)
+ 767   1          {
+ 768   2            case FP_BLUE:
+ 769   2              AS608_SendData(0x01);
+ 770   2              AS608_SendData(0x01);
+ 771   2              AS608_SendData(0x00);
+ 772   2              AS608_SendData(0x50);
+ 773   2              temp = 0x01+0x07+0x41+0x02+0x50;
+ 774   2              break;
+ 775   2            case FP_GREEN:
+ 776   2              AS608_SendData(0x01);
+ 777   2              AS608_SendData(0x02);
+ 778   2              AS608_SendData(0x02);
+ 779   2              AS608_SendData(0);
+ 780   2              temp = 0x01+0x07+0x41+0x05+0;
+ 781   2              break;  
+ 782   2            case FP_RED:
+ 783   2              AS608_SendData(0x01);
+ 784   2              AS608_SendData(0x04);
+ 785   2              AS608_SendData(0x04);
+ 786   2              AS608_SendData(0);
+ 787   2              temp = 0x01+0x07+0x41+0x09+0;
+ 788   2              break;
+ 789   2            case FP_NONE_COLOR:
+ 790   2              AS608_SendData(0x04);
+C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 15:15:14 PAGE 14  
 
- 484   1      
- 485   1        // unsigned char sure = 0; //,p=0;
- 486   1        if (light_id == Light_Color)
- 487   1          return;
- 488   1      
- 489   1        if (AS608_PackHead() == 1)
- 490   1          return;
- 491   1        SendFlag(0x01);
- 492   1        SendLength(0x07);
- 493   1        Sendcmd(0x41);
- 494   1        switch (light_id)
- 495   1        {
- 496   2        case FP_BLUE:
- 497   2          AS608_SendData(0x01);
- 498   2          AS608_SendData(0x01);
- 499   2          AS608_SendData(0x00);
- 500   2          AS608_SendData(0x50);
- 501   2          temp = 0x01 + 0x07 + 0x41 + 0x02 + 0x50;
- 502   2          break;
- 503   2        case FP_GREEN:
- 504   2          AS608_SendData(0x01);
- 505   2          AS608_SendData(0x02);
- 506   2          AS608_SendData(0x02);
- 507   2          AS608_SendData(0);
- 508   2          temp = 0x01 + 0x07 + 0x41 + 0x05 + 0;
- 509   2          break;
- 510   2        case FP_RED:
- 511   2          AS608_SendData(0x01);
- 512   2          AS608_SendData(0x04);
- 513   2          AS608_SendData(0x04);
- 514   2          AS608_SendData(0);
- 515   2          temp = 0x01 + 0x07 + 0x41 + 0x09 + 0;
- 516   2          break;
- 517   2        case FP_NONE_COLOR:
- 518   2          AS608_SendData(0x04);
- 519   2          AS608_SendData(0x00);
- 520   2          AS608_SendData(0x00);
- 521   2          AS608_SendData(0xC8);
- 522   2          temp = 0x01 + 0x07 + 0x41 + 0x04 + 0xC8;
- 523   2          break;
- 524   2        }
- 525   1        SendCheck(temp);
- 526   1      
- 527   1        //sure=ReturnFlag(&p);
- 528   1        // sure = JudgeStr(1000, 0x03);
- 529   1        //#endif
- 530   1        Light_Color = light_id;
- 531   1      
- 532   1        //  }
- 533   1      }
- 534          
- 535          FP_COLOR_E FP_Get_Light(void)
- 536          {
- 537   1        return Light_Color;
- 538   1      }
+ 791   2              AS608_SendData(0x00);
+ 792   2              AS608_SendData(0x00);
+ 793   2              AS608_SendData(0xC8);
+ 794   2              temp = 0x01+0x07+0x41+0x04+0xC8;
+ 795   2              break;
+ 796   2          }
+ 797   1          SendCheck(temp);
+ 798   1      
+ 799   1          //sure=ReturnFlag(&p);
+ 800   1          sure = JudgeStr(1000, 0x03);
+ 801   1      //#endif
+ 802   1          Light_Color = light_id;
+ 803   1      
+ 804   1      //  }
+ 805   1      }
+ 806          
+ 807          FP_COLOR_E FP_Get_Light(void)
+ 808          {
+ 809   1        return Light_Color;
+ 810   1      }
+ 811          
+ 812          
+ 813          unsigned char FP_Get_Start_Flag(void)
+ 814          {
+ 815   1        if(UART0_RXLEN>0)
+ 816   1        {
+ 817   2          unsigned char i;
+ 818   2          
+ 819   2          for (i = 0; i < UART0_RXLEN; i++)
+ 820   2          {
+ 821   3            if (UART0_RXBUF[i] == 0x55)
+ 822   3            {
+ 823   4              UART0_RXLEN = 0;
+ 824   4              return 1;
+ 825   4            }
+ 826   3          }
+ 827   2        }
+ 828   1        return 0;
+ 829   1      }
+ 830          //#endif//__PREIPHERAL_FP_LT5X_SUPPORT__
+ 831          
+ 832          
+ 833          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1681    ----
+   CODE SIZE        =   1948    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     25      44
+   XDATA SIZE       =     25      54
    PDATA SIZE       =   ----    ----
-C51 COMPILER V9.59.0.0   DQIOT_FP_SY                                                       03/04/2021 10:18:17 PAGE 10  
-
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----

@@ -1,13 +1,65 @@
----- TIMER0_VECTOR Matches (2 in 1 files) ----
-Timer.c (src) line 4 : #define TIMER0_VECTOR   1       //TIMER0 Interrupt Vevtor
-Timer.c (src) line 23 : void TIMER0_ISR(void) interrupt TIMER0_VECTOR
----- Touch_Init Matches (3 in 3 files) ----
-main in Main.c (src) :     Touch_Init();
-Touch.c (src) line 49 : void Touch_Init(void)
-Touch.h (inc) line 4 : void Touch_Init(void);
----- PCON Matches (3 in 3 files) ----
-main in Main.c (src) : 		PCON |= 
-OB38A08T2.h (inc) line 19 : sfr PCON   = 0x87;
-UART0_init in UART0.c (src) :     PCON    |= 0x80;            // SMOD =1
----- TCON1 Matches (1 in 1 files) ----
-OB38A08T2.h (inc) line 62 : sfr TCON1  = 0xD8;
+---- STR_ID_KEY_LIGHT Matches (3 in 2 files) ----
+sys_str_id in mmi_com.h (mmi_inc) : 	STR_ID_KEY_LIGHT,//鎸夐敭鐏?
+mmi_fm.c (mmi_src) line 25 : 									STR_ID_KEY_LIGHT,
+mmi_dq_factory_mode_test_item_select in mmi_fm.c (mmi_src) : 		case STR_ID_KEY_LIGHT:
+---- msg_aud_id_list Matches (3 in 2 files) ----
+mmi_com.c (mmi_src) line 8 : const msg_aud_id_list msg_aud_list[] = 
+{anonmsg_aud_id_list} in mmi_com.h (mmi_inc) : }msg_aud_id_list;
+mmi_com.h (mmi_inc) line 15 : extern const msg_aud_id_list msg_aud_list[];
+---- msg_aud_list Matches (2 in 2 files) ----
+mmi_com.c (mmi_src) line 8 : const msg_aud_id_list msg_aud_list[] = 
+mmi_com.h (mmi_inc) line 15 : //extern const msg_aud_id_list msg_aud_list[];
+---- TIMER1_Delay Matches (4 in 4 files) ----
+delay.h (inc) line 6 : #define delay_ms TIMER1_Delay
+dqiot_drv_control.c (src) line 135 : 	TIMER1_Delay(10);
+Timer.c (src) line 51 : void TIMER1_Delay(unsigned int delay_ms)
+Timer.h (inc) line 26 : void TIMER1_Delay(unsigned int delay_ms);
+---- dqiot_drv_signal_led_init Matches (2 in 2 files) ----
+dqiot_drv_led.c (src) line 13 : void dqiot_drv_signal_led_init(void)
+dqiot_drv_led.h (inc) line 12 : void dqiot_drv_signal_led_init(void);
+---- dqiot_drv_touch_init Matches (3 in 3 files) ----
+dqiot_drv_touch.c (src) line 99 : void dqiot_drv_touch_init(void)
+dqiot_drv_touch.h (inc) line 12 : void dqiot_drv_touch_init(void);
+mmi_key.c (mmi_src) line 16 : 	dqiot_drv_touch_init();
+---- mmi_dq_led_init Matches (3 in 3 files) ----
+Main.c (src) line 19 :     mmi_dq_led_init();
+mmi_led.c (mmi_src) line 12 : void mmi_dq_led_init(void)
+mmi_led.h (mmi_inc) line 11 : void mmi_dq_led_init(void);
+---- mmi_dq_sys_chg_pwd Matches (1 in 1 files) ----
+mmi_sys.c (mmi_src) line 958 : 		mmi_dq_sys_chg_pwd,
+---- mmi_dq_alarm_stop Matches (4 in 4 files) ----
+mmi_alarm.c (mmi_src) line 30 : void mmi_dq_alarm_stop(void)
+mmi_alarm.h (mmi_inc) line 20 : void mmi_dq_alarm_stop(void);
+mmi_ms_pwd_opt_fun in mmi_ms.c (mmi_src) : 							mmi_dq_alarm_stop();
+mmi_dq_sys_door_open in mmi_sys.c (mmi_src) : 	mmi_dq_alarm_stop();
+---- ADCSTA Matches (1 in 1 files) ----
+ADCInterrupt in ADC.c (src) :     ADCSTA = 0;
+---- mmi_dq_led_init Matches (3 in 3 files) ----
+main in Main.c (src) :     mmi_dq_led_init();
+mmi_led.c (mmi_src) line 13 : void mmi_dq_led_init(void)
+mmi_led.h (mmi_inc) line 11 : void mmi_dq_led_init(void);
+---- dqiot_drv_fp_init Matches (3 in 3 files) ----
+dqiot_drv_fp.c (src) line 20 : void dqiot_drv_fp_init(void)
+dqiot_drv_fp.h (inc) line 10 : void dqiot_drv_fp_init(void);
+mmi_dq_fp_init in mmi_fps.c (mmi_src) : 	dqiot_drv_fp_init();
+---- dqiot_drv_touch_normal Matches (3 in 1 files) ----
+dqiot_drv_touch.c (src) line 46 : static unsigned char dqiot_drv_touch_normal(void)
+dqiot_drv_touch_check in dqiot_drv_touch.c (src) : 	dqiot_drv_touch_normal();
+dqiot_drv_touch_work in dqiot_drv_touch.c (src) : 	dqiot_drv_touch_normal();
+---- mmi_ms_fps_opt_fun Matches (3 in 2 files) ----
+mmi_dq_ms_sys_msg_handle in mmi_ms.c (mmi_src) : 				mmi_ms_fps_opt_fun(sys_msg_que.que_data);
+mmi_ms.c (mmi_src) line 692 : void mmi_ms_fps_opt_fun(unsigned char fps_val)
+mmi_ms.h (mmi_inc) line 174 : void mmi_ms_fps_opt_fun(unsigned char fps_val);
+---- dqiot_drv_get_reset_pin Matches (2 in 1 files) ----
+mmi_rst.c (mmi_src) line 33 : 	if(dqiot_drv_get_reset_pin() == 0)
+mmi_rst.c (mmi_src) line 68 : 	return dqiot_drv_get_reset_pin();
+---- dqiot_drv_get_reset_pin Matches (4 in 3 files) ----
+dqiot_drv_reset.c (src) line 29 : uint8_t dqiot_drv_get_reset_pin(void)
+dqiot_drv_reset.h (inc) line 19 : unsigned char dqiot_drv_get_reset_pin(void);
+mmi_dq_rst_timer_event in mmi_rst.c (mmi_src) : 	if(dqiot_drv_get_reset_pin() == 0)
+mmi_dq_rst_get_pin in mmi_rst.c (mmi_src) : 	return dqiot_drv_get_reset_pin();
+---- dqiot_drv_get_reset_pin Matches (4 in 3 files) ----
+dqiot_drv_reset.c (src) line 29 : unsigned char dqiot_drv_get_reset_pin(void)
+dqiot_drv_reset.h (inc) line 19 : unsigned char dqiot_drv_get_reset_pin(void);
+mmi_dq_rst_timer_event in mmi_rst.c (mmi_src) : 	if(dqiot_drv_get_reset_pin() == 0)
+mmi_dq_rst_get_pin in mmi_rst.c (mmi_src) : 	return dqiot_drv_get_reset_pin();

@@ -1,1 +1,1 @@
-"..\src\Main.c" LARGE OPTIMIZE (8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc;..\dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Main.lst) TABS (2) OBJECT(.\Objects\Main.obj)
+"..\src\Main.c" LARGE OPTIMIZE (8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Main.lst) TABS (2) OBJECT(.\Objects\Main.obj)

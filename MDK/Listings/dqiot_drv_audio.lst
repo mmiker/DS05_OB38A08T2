@@ -1,0 +1,321 @@
+C51 COMPILER V9.59.0.0   DQIOT_DRV_AUDIO                                                   03/04/2021 15:14:13 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DQIOT_DRV_AUDIO
+OBJECT MODULE PLACED IN .\Objects\dqiot_drv_audio.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\dqiot_drv_audio.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..
+                    -\mmi_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\dqiot_drv_audio.lst) TABS(2) OBJECT(.\Objects\dqiot_drv_audio.obj)
+
+line level    source
+
+   1          #ifndef __DQIOT_DRV_AUDIO_C__
+   2          #define __DQIOT_DRV_AUDIO_C__
+   3          
+   4          #include "OB38A08T2.h"
+   5          #include "dqiot_drv_audio.h"
+   6          #include "TIMER.h"
+   7          
+   8          //AU_RESET:P1.6 PUSHPULL
+   9          //AU_DATA:P0.0 PUSHPULL
+  10          //AU_BUSY:P0.1 INPUT
+  11          
+  12          #define AUD_RST_SET P1_6 = 1
+  13          #define AUD_RST_CLR P1_6 = 0
+  14          
+  15          #define AUD_DATA_SET  P0_0 = 1
+  16          #define AUD_DATA_CLR  P0_0 = 0
+  17          #define AUD_DATA_TOGGLE P0_0 = ~P0_0
+  18          
+  19          #define AUD_BUSY  P0_1
+  20          
+  21          #define AUD_RST_INIT  P1M1&=0xBF;P1M0|=0x40
+  22          #define AUD_DATA_INIT P0M1&=0xFE;P0M0|=0x01
+  23          #define AUD_BUSY_INIT P0M1|=0x02;P0M0&=0xFD
+  24          
+  25          #define AUD_RST_DEINIT  P1M1|=0x40;P1M0&=0xBF
+  26          #define AUD_DATA_DEINIT P0M1|=0x01;P0M0&=0xFE
+  27          
+  28          
+  29          static uint8_t audio_flag=0; // 
+  30          static uint8_t audio_section=0,audio_time_count=0;
+  31          #define AUDIO_MAX_CACHE_NUM   20
+  32          static uint8_t audio_cache[AUDIO_MAX_CACHE_NUM] = {0};
+  33          
+  34          //static uint8_t audio_play_end_flag = 0;
+  35          
+  36          /*
+  37          parameter: 
+  38            none
+  39          return :
+  40            none
+  41          */
+  42          void dqiot_drv_audio_init(void)
+  43          {
+  44   1        AUD_RST_INIT;
+  45   1        AUD_DATA_INIT;
+  46   1        AUD_BUSY_INIT;
+  47   1      
+  48   1        AUD_RST_CLR;
+  49   1        AUD_DATA_CLR;
+  50   1        return;
+  51   1      }
+  52          
+  53          /*
+  54          parameter: 
+C51 COMPILER V9.59.0.0   DQIOT_DRV_AUDIO                                                   03/04/2021 15:14:13 PAGE 2   
+
+  55            none
+  56          return :
+  57            none
+  58          */
+  59          void dqiot_drv_audio_deinit(void)
+  60          {
+  61   1        AUD_RST_DEINIT;
+  62   1        AUD_DATA_DEINIT;
+  63   1      
+  64   1        AUD_RST_CLR;
+  65   1        AUD_DATA_CLR;
+  66   1        return;
+  67   1      }
+  68          
+  69          
+  70          /*
+  71          parameter: 
+  72            none
+  73          return :
+  74            none
+  75          */
+  76          unsigned char dqiot_drv_audio_play(unsigned char aud_id)
+  77          {
+  78   1        unsigned char i = 0;
+  79   1        if(audio_flag == 0 && AUD_BUSY == 1)
+  80   1        { 
+  81   2          audio_flag = 1;
+  82   2          audio_section = aud_id;
+  83   2          audio_time_count = 0;
+  84   2          TIMER0_Start();
+  85   2        }
+  86   1        else
+  87   1        {
+  88   2          for(i=0;i<AUDIO_MAX_CACHE_NUM;i++)
+  89   2          {
+  90   3            if(audio_cache[i]==0)
+  91   3              break;
+  92   3          }
+  93   2          if(i<AUDIO_MAX_CACHE_NUM)
+  94   2            audio_cache[i]=aud_id;
+  95   2        }
+  96   1          
+  97   1        return 1;
+  98   1      }
+  99          
+ 100          /*
+ 101          parameter: 
+ 102            none
+ 103          return :
+ 104            none
+ 105          */
+ 106          void dqiot_drv_audio_stop(void)
+ 107          {
+ 108   1        unsigned char i = 0;
+ 109   1      
+ 110   1        if( audio_flag == 0&&AUD_BUSY == 1)
+ 111   1          return;
+ 112   1      
+ 113   1        TIMER0_Stop();
+ 114   1      
+ 115   1        for(i=0;i<AUDIO_MAX_CACHE_NUM;i++)
+ 116   1        {
+C51 COMPILER V9.59.0.0   DQIOT_DRV_AUDIO                                                   03/04/2021 15:14:13 PAGE 3   
+
+ 117   2          audio_cache[i]=0;
+ 118   2        }
+ 119   1      
+ 120   1        if(audio_time_count>=4)
+ 121   1        {
+ 122   2          audio_section = 0;
+ 123   2          audio_flag = 3;
+ 124   2          audio_time_count = 0;
+ 125   2        }
+ 126   1        else
+ 127   1        {
+ 128   2          audio_section = 0;
+ 129   2          audio_flag = 3;
+ 130   2        }
+ 131   1          
+ 132   1          TIMER0_Start();
+ 133   1        return;
+ 134   1      }
+ 135          
+ 136          /*
+ 137          parameter: 
+ 138            none
+ 139          return :
+ 140            none
+ 141          */
+ 142          unsigned char dqiot_drv_audio_check_busy(void)
+ 143          {
+ 144   1        return AUD_BUSY;
+ 145   1      }
+ 146          
+ 147          /*
+ 148          parameter: 
+ 149            none
+ 150          return :
+ 151            none
+ 152          */
+ 153          unsigned char dqiot_drv_audio_get_state(void)
+ 154          {
+ 155   1        return audio_flag;
+ 156   1      }
+ 157          
+ 158          /*
+ 159          parameter: 
+ 160            none
+ 161          return :
+ 162            none
+ 163          */
+ 164          unsigned char dqiot_drv_audio_get_section(void)
+ 165          {
+ 166   1        return audio_section;
+ 167   1      }
+ 168          
+ 169          /*
+ 170          parameter: 
+ 171            none
+ 172          return :
+ 173            none
+ 174          */
+ 175          //unsigned char dqiot_drv_audio_get_end_flag(void)
+ 176          //{
+ 177          //  if(audio_play_end_flag == 1)
+ 178          //  {
+C51 COMPILER V9.59.0.0   DQIOT_DRV_AUDIO                                                   03/04/2021 15:14:13 PAGE 4   
+
+ 179          //    audio_play_end_flag = 0;
+ 180          //    return 1;
+ 181          //  }
+ 182          //  return 0;
+ 183          //} 
+ 184          
+ 185          
+ 186          /*
+ 187          parameter: 
+ 188            none
+ 189          return :
+ 190            none
+ 191          */
+ 192          void Audio_Select_Handle_in_Timer(void)
+ 193          {
+ 194   1        if(audio_flag == 1)
+ 195   1        {
+ 196   2          if(audio_time_count == 0)
+ 197   2          {
+ 198   3            AUD_RST_SET;
+ 199   3            AUD_DATA_CLR;
+ 200   3          }
+ 201   2          else if(audio_time_count == 2)
+ 202   2          {
+ 203   3            AUD_RST_CLR;
+ 204   3          }
+ 205   2          else if(audio_time_count >= 4)
+ 206   2          {
+ 207   3            AUD_DATA_TOGGLE;
+ 208   3          }
+ 209   2          audio_time_count ++;
+ 210   2      
+ 211   2          if(audio_time_count >= (audio_section + 1) * 2 + 4)
+ 212   2          {
+ 213   3            audio_time_count = 0;
+ 214   3            AUD_RST_CLR;
+ 215   3            AUD_DATA_CLR;
+ 216   3            audio_flag = 2;
+ 217   3          }
+ 218   2        }
+ 219   1        else if(audio_flag == 3)
+ 220   1        {
+ 221   2          if(audio_time_count == 0)
+ 222   2          {
+ 223   3            AUD_DATA_CLR;
+ 224   3          } 
+ 225   2          else if(audio_time_count == 1)
+ 226   2          {
+ 227   3            AUD_RST_SET;
+ 228   3          }
+ 229   2          else if(audio_time_count == 3)
+ 230   2          {
+ 231   3            AUD_RST_CLR;
+ 232   3          }
+ 233   2          audio_time_count ++;
+ 234   2          if(audio_time_count >= 4)
+ 235   2          {
+ 236   3            audio_time_count = 0;
+ 237   3            AUD_RST_CLR;
+ 238   3            AUD_DATA_CLR;
+ 239   3            audio_flag = 2;
+ 240   3          }
+C51 COMPILER V9.59.0.0   DQIOT_DRV_AUDIO                                                   03/04/2021 15:14:13 PAGE 5   
+
+ 241   2          
+ 242   2        }
+ 243   1      
+ 244   1      }
+ 245          
+ 246          /*
+ 247          parameter: 
+ 248            none
+ 249          return :
+ 250            none
+ 251          */
+ 252          void Audio_timer_event_handler(void)
+ 253          {
+ 254   1        if((audio_flag == 2)&&(AUD_BUSY == 1))
+ 255   1        {
+ 256   2          //extern void mmi_dq_sys_aud_end(void);
+ 257   2          if(audio_cache[0]==0)
+ 258   2          {
+ 259   3            audio_section = 0;
+ 260   3            TIMER0_Stop();
+ 261   3            //mmi_dq_sys_aud_end();
+ 262   3            //audio_play_end_flag = 1;
+ 263   3            audio_flag = 0;
+ 264   3          }
+ 265   2          else
+ 266   2          {
+ 267   3            char i = 0;
+ 268   3            audio_flag = 1;
+ 269   3            audio_section = audio_cache[0];
+ 270   3            for(i=0;i<AUDIO_MAX_CACHE_NUM-1;i++)
+ 271   3            {
+ 272   4              if(audio_cache[i+1]!=0)
+ 273   4              {
+ 274   5                audio_cache[i]=audio_cache[i+1];
+ 275   5              }
+ 276   4              else
+ 277   4                break;
+ 278   4            }
+ 279   3            audio_cache[i]=0;
+ 280   3            audio_time_count = 0;
+ 281   3          }
+ 282   2        }
+ 283   1        else
+ 284   1          Audio_Select_Handle_in_Timer();
+ 285   1      }
+ 286          
+ 287          
+ 288          #endif//__DQIOT_DRV_AUDIO_C__
+ 289          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    556    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     23       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

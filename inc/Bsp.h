@@ -1,9 +1,0 @@
-#ifndef __BSP_H__
-#define __BSP_H__
-
-void Bsp_Init(void);
-void Bsp_Sleep(void);
-void Bsp_Wakeup(void);
-void INT1_Init(void);
-
-#endif

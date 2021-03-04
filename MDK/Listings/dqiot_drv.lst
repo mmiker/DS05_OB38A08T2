@@ -1,0 +1,123 @@
+C51 COMPILER V9.59.0.0   DQIOT_DRV                                                         03/04/2021 15:15:13 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DQIOT_DRV
+OBJECT MODULE PLACED IN .\Objects\dqiot_drv.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\dqiot_drv.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi_i
+                    -nc) DEBUG OBJECTEXTEND PRINT(.\Listings\dqiot_drv.lst) TABS(2) OBJECT(.\Objects\dqiot_drv.obj)
+
+line level    source
+
+   1          
+   2          
+   3          #include "dqiot_drv.h"
+   4          
+   5          
+   6          //LDO_EN:P1.3 PUSHPULL
+   7          //VIB_INT:P1.4 INPUT
+   8          //KEY1:P1.7 INPUT
+   9          //KEY_2/ADC:P1.2 INPUT
+  10          #define LDO_EN_INIT P1M1&=0xF7;P1M0|=0x08
+  11          #define VIB_INT_INIT P1M1|=0x10;P1M0&=0xEF
+  12          
+  13          #define LDO_EN_ON P1_3 = 1
+  14          #define LDO_EN_OFF P1_3 = 0
+  15          
+  16          
+  17          //1:enable, 0:disable
+  18          #define g_SleepCtrl     (*((unsigned char volatile xdata*)0x30D))
+  19          
+  20          /*
+  21          parameter: 
+  22            none
+  23          return :
+  24            none
+  25          */
+  26          void dqiot_drv_init(void)
+  27          {
+  28   1        TIMER_Init();
+  29   1        UART0_init();
+  30   1        I2C_Master_Init();
+  31   1      
+  32   1        LDO_EN_INIT;
+  33   1        VIB_INT_INIT;
+  34   1      
+  35   1        LDO_EN_ON;
+  36   1      
+  37   1        g_SleepCtrl = 0;
+  38   1      }
+  39          
+  40          /*
+  41          parameter: 
+  42            none
+  43          return :
+  44            none
+  45          */
+  46          void dqiot_drv_enter_sleep(void)
+  47          {
+  48   1        LDO_EN_OFF;
+  49   1      
+  50   1        UART0_deinit();
+  51   1        
+  52   1        dqiot_drv_fp_enter_sleep();
+  53   1        dqiot_drv_audio_deinit();
+  54   1        g_SleepCtrl = 1;
+C51 COMPILER V9.59.0.0   DQIOT_DRV                                                         03/04/2021 15:15:13 PAGE 2   
+
+  55   1      }
+  56          
+  57          /*
+  58          parameter: 
+  59            none
+  60          return :
+  61            none
+  62          */
+  63          void dqiot_drv_wake_up(void)
+  64          {
+  65   1        g_SleepCtrl = 0;
+  66   1        dqiot_drv_fp_wake_up();
+  67   1        dqiot_drv_audio_init();
+  68   1      
+  69   1        UART0_init();
+  70   1        
+  71   1        LDO_EN_ON;
+  72   1      
+  73   1      }
+  74          
+  75          
+  76          void INT1_ISR(void) interrupt d_INT1_Vector
+  77          {
+  78   1          if(P2_6 == 0)
+  79   1          {
+  80   2        //  Led_Off(LED_TYPE_2);
+  81   2          }
+  82   1        else
+  83   1        {
+  84   2        //  Led_On(LED_TYPE_2);
+  85   2        }
+  86   1      }
+  87          
+  88          void INT1_Init(void)
+  89          {
+  90   1        P2M1|=0x40;P2M0&=0xBF;
+  91   1        P2_6 = 0;
+  92   1      
+  93   1        IT1 = 1;
+  94   1        ENHIT |= 0x08;
+  95   1        INTDEG |= 0x04;
+  96   1        EX1 = 1;
+  97   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     84    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      4    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

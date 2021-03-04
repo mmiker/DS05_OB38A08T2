@@ -1,0 +1,194 @@
+C51 COMPILER V9.59.0.0   MMI_KEY                                                           03/04/2021 15:15:15 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MMI_KEY
+OBJECT MODULE PLACED IN .\Objects\mmi_key.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\mmi_src\mmi_key.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi
+                    -_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\mmi_key.lst) TABS(2) OBJECT(.\Objects\mmi_key.obj)
+
+line level    source
+
+   1          #ifndef __MMI_KEY_C__
+   2          #define __MMI_KEY_C__
+   3          
+   4          #include "dqiot_drv.h"
+   5          #include "mmi_feature.h"
+   6          #include "mmi_key.h"
+   7          
+   8          /*
+   9          parameter: 
+  10            none
+  11          return :
+  12            none
+  13          */
+  14          void mmi_dq_key_init(void)
+  15          {
+  16   1        dqiot_drv_touch_init();
+  17   1        return;
+  18   1      }
+  19          
+  20          /*
+  21          parameter: 
+  22            none
+  23          return :
+  24            none
+  25          */
+  26          unsigned char mmi_dq_key_check(void)
+  27          {
+  28   1        return dqiot_drv_touch_check();
+  29   1      }
+  30          
+  31          /*
+  32          parameter: 
+  33            none
+  34          return :
+  35            none
+  36          */
+  37          unsigned char mmi_dq_key_work(void)
+  38          {
+  39   1        return dqiot_drv_touch_work();
+  40   1      }
+  41          
+  42          /*
+  43          parameter: 
+  44            none
+  45          return :
+  46            none
+  47          */
+  48          unsigned char mmi_dq_key_get_value(void)
+  49          {
+  50   1        return dqiot_drv_get_touch_value();
+  51   1      }
+  52          
+  53          /*
+  54          parameter: 
+C51 COMPILER V9.59.0.0   MMI_KEY                                                           03/04/2021 15:15:15 PAGE 2   
+
+  55            none
+  56          return :
+  57            none
+  58          */
+  59          unsigned char mmi_dq_get_key_map(unsigned char index)
+  60          {
+  61   1        unsigned char key_val = KEY_INVALID;
+  62   1        #ifdef __DQ_PROJECT_DS08__
+                switch(index)
+                {
+                  case 0:
+                    key_val = KEY_S;
+                    break;
+                  case 1:
+                    key_val = KEY_0;
+                    break;
+                  case 2:
+                    key_val = KEY_H;
+                    break;
+                  case 3:
+                    key_val = KEY_7;
+                    break;
+                  case 4:
+                    key_val = KEY_4;
+                    break;
+                  case 5:
+                    key_val = KEY_1;
+                    break;
+                  case 6:
+                    key_val = KEY_8;
+                    break;
+                  case 7:
+                    key_val = KEY_9;
+                    break;
+                  case 8:
+                    key_val = KEY_6;
+                    break;
+                  case 9:
+                    key_val = KEY_3;
+                    break;
+                  case 10:
+                    key_val = KEY_2;
+                    break;
+                  case 11:
+                    key_val = KEY_5;
+                    break;
+                  default:
+                    break;
+                }
+                #elif defined(__DQ_PROJECT_DS05__)
+ 105   1        switch(index)
+ 106   1        {
+ 107   2          case 0:
+ 108   2            key_val = KEY_3;
+ 109   2            break;
+ 110   2          case 1:
+ 111   2            key_val = KEY_6;
+ 112   2            break;
+ 113   2          case 2:
+ 114   2            key_val = KEY_9;
+ 115   2            break;
+ 116   2          case 3:
+C51 COMPILER V9.59.0.0   MMI_KEY                                                           03/04/2021 15:15:15 PAGE 3   
+
+ 117   2            key_val = KEY_H;
+ 118   2            break;
+ 119   2          case 4:
+ 120   2            key_val = KEY_0;
+ 121   2            break;
+ 122   2          case 5:
+ 123   2            key_val = KEY_8;
+ 124   2            break;
+ 125   2          case 6:
+ 126   2            key_val = KEY_5;
+ 127   2            break;
+ 128   2          case 7:
+ 129   2            key_val = KEY_2;
+ 130   2            break;
+ 131   2          case 8:
+ 132   2            key_val = KEY_S;
+ 133   2            break;
+ 134   2          case 9:
+ 135   2            key_val = KEY_7;
+ 136   2            break;
+ 137   2          case 10:
+ 138   2            key_val = KEY_4;
+ 139   2            break;
+ 140   2          case 11:
+ 141   2            key_val = KEY_1;
+ 142   2            break;
+ 143   2          default:
+ 144   2            break;
+ 145   2        }
+ 146   1        #endif
+ 147   1        return key_val;
+ 148   1      }
+ 149          
+ 150          /*
+ 151          parameter: 
+ 152            none
+ 153          return :
+ 154            none
+ 155          */
+ 156          void mmi_dq_key_entersleep(void)
+ 157          {
+ 158   1      #ifdef BYD_CTK_ENABLE
+                //TIMER2_ENABLE();
+                //CSD_DISABLE();
+                //lowpower_idle();
+                //TIMER2_DISABLE();
+                //CSD_ENABLE();
+              #endif
+ 165   1      }
+ 166          #endif//__MMI_KEY_C__
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    113    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      4    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

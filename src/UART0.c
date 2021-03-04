@@ -13,7 +13,7 @@
 //===============================================================
 bit bU0TX = 0;
 unsigned char UART0_RXBUF[UART0_BUFFLEN];
-unsigned char UART0_RXLEN = 0;
+unsigned char UART0_RXLEN;
 //=========================================================================
 void UART0_init(void)
 {
@@ -29,6 +29,12 @@ void UART0_init(void)
 	for(i=0;i<UART0_BUFFLEN;i++)
 		UART0_RXBUF[i] = 0;
 	UART0_RXLEN = 0;
+}
+
+void UART0_deinit(void)
+{
+	S0CON &= 0xEF;
+
 }
 
 void UART0_ISR(void) interrupt d_UART0_Vector

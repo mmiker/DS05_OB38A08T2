@@ -1,0 +1,1 @@
+"..\src\dqiot_drv_wifi.c" LARGE OPTIMIZE (8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\dqiot_drv_wifi.lst) TABS (2) OBJECT(.\Objects\dqiot_drv_wifi.obj)

@@ -1,10 +1,10 @@
-C51 COMPILER V9.59.0.0   UART0                                                             03/04/2021 10:18:17 PAGE 1   
+C51 COMPILER V9.59.0.0   UART0                                                             03/04/2021 15:14:13 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE UART0
 OBJECT MODULE PLACED IN .\Objects\UART0.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\UART0.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc;.
-                    -.\dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\UART0.lst) TABS(2) OBJECT(.\Objects\UART0.obj)
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\UART0.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc) 
+                    -DEBUG OBJECTEXTEND PRINT(.\Listings\UART0.lst) TABS(2) OBJECT(.\Objects\UART0.obj)
 
 line level    source
 
@@ -23,7 +23,7 @@ line level    source
   13          //===============================================================
   14          bit bU0TX = 0;
   15          unsigned char UART0_RXBUF[UART0_BUFFLEN];
-  16          unsigned char UART0_RXLEN = 0;
+  16          unsigned char UART0_RXLEN;
   17          //=========================================================================
   18          void UART0_init(void)
   19          {
@@ -41,34 +41,40 @@ line level    source
   31   1        UART0_RXLEN = 0;
   32   1      }
   33          
-  34          void UART0_ISR(void) interrupt d_UART0_Vector
+  34          void UART0_deinit(void)
   35          {
-  36   1          if (RI)                     // INT_RX
-  37   1          {
-  38   2              RI = 0;                 // RI clear
-  39   2              if(UART0_RXLEN<UART0_BUFFLEN)
-  40   2                UART0_RXBUF[UART0_RXLEN++] = S0BUF;         // Read BUF, user code...
-  41   2          }
-  42   1          else                        // INT_TX
+  36   1        S0CON &= 0xEF;
+  37   1      
+  38   1      }
+  39          
+  40          void UART0_ISR(void) interrupt d_UART0_Vector
+  41          {
+  42   1          if (RI)                     // INT_RX
   43   1          {
-  44   2              bU0TX  = 0;
-  45   2              TI     = 0;             // TI clear
-  46   2          }
-  47   1      }
-  48          
-  49          void UART0_TX(unsigned char n_temp0)
-  50          {
-  51   1          bU0TX = 1;
-  52   1          S0BUF = n_temp0;
-  53   1          while(bU0TX);
-  54   1      }
-C51 COMPILER V9.59.0.0   UART0                                                             03/04/2021 10:18:17 PAGE 2   
+  44   2              RI = 0;                 // RI clear
+  45   2              if(UART0_RXLEN<UART0_BUFFLEN)
+  46   2                UART0_RXBUF[UART0_RXLEN++] = S0BUF;         // Read BUF, user code...
+  47   2          }
+  48   1          else                        // INT_TX
+  49   1          {
+  50   2              bU0TX  = 0;
+  51   2              TI     = 0;             // TI clear
+  52   2          }
+  53   1      }
+  54          
+C51 COMPILER V9.59.0.0   UART0                                                             03/04/2021 15:14:13 PAGE 2   
 
-  55          //=========================================================================
+  55          void UART0_TX(unsigned char n_temp0)
+  56          {
+  57   1          bU0TX = 1;
+  58   1          S0BUF = n_temp0;
+  59   1          while(bU0TX);
+  60   1      }
+  61          //=========================================================================
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    126    ----
+   CODE SIZE        =    130    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     21    ----
    PDATA SIZE       =   ----    ----

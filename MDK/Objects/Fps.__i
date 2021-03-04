@@ -1,0 +1,1 @@
+"..\src\Fps.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Fps.lst) TABS (2) OBJECT(.\Objects\Fps.obj)

@@ -2,8 +2,9 @@
 #define __MMI_FPS_H__
 
 #include "mmi_feature.h"
+#ifdef __LOCK_FP_SUPPORT__
 #include "dqiot_fp_sy.h"
-// #include "mcu02_sfr.h"
+
 
 // typedef void (*fp_irq_handle_callback)(void);
 
@@ -120,6 +121,14 @@ parameter:
 return :
 	none
 */
+unsigned char mmi_dq_fp_search(unsigned char Buf_id, unsigned short *index);
+
+/*
+parameter: 
+	none
+return :
+	none
+*/
 FP_COLOR_E mmi_dq_fp_get_light(void);
 
 /*
@@ -137,16 +146,7 @@ return :
 	none
 */
 unsigned char mmi_dq_fp_get_pin(void);
-
-/*
-parameter: 
-	none
-return :
-	none
-*/
-void Add_FR(u16 ID);
-void Del_FR(u16 TouchNum);
-void press_FR(void);
+#endif
 
 #endif //__MMI_FPS_H__
 

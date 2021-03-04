@@ -1,10 +1,10 @@
-C51 COMPILER V9.59.0.0   LED                                                               03/04/2021 10:18:16 PAGE 1   
+C51 COMPILER V9.59.0.0   LED                                                               02/22/2021 12:20:10 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE LED
 OBJECT MODULE PLACED IN .\Objects\Led.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\Led.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc;..\
-                    -dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Led.lst) TABS(2) OBJECT(.\Objects\Led.obj)
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\src\Led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc) DEBUG OBJECTEXTEND 
+                    -PRINT(.\Listings\Led.lst) TABS(2) OBJECT(.\Objects\Led.obj)
 
 line level    source
 
@@ -20,7 +20,7 @@ line level    source
   10   1        SEGEN0 = 0x00;
   11   1        SEGEN1 = 0x00;
   12   1        LEDCLK = 35;
-  13   1        LEDCON = 0x91;
+  13   1        LEDCON = 0x90;
   14   1      }
   15          
   16          void Led_On(unsigned char led)

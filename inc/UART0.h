@@ -12,5 +12,6 @@ extern unsigned char UART0_RXLEN;
 
 void UART0_TX(unsigned char n_temp0);
 void UART0_init(void);
+void UART0_deinit(void);
 
 #endif

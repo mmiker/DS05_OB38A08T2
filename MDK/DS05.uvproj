@@ -146,7 +146,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>11</TargetSelection>
+          <TargetSelection>-1</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -160,7 +160,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>D:\DS05\ChipWatcher\SMLink51\SMLink51.dll</Driver>
+            <Driver>F:\SyncMOS\ChipWatcher\SMLink51\SMLink51.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -309,7 +309,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\inc;..\mmi_inc;..\dqiot_inc</IncludePath>
+              <IncludePath>..\inc;..\mmi_inc</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
@@ -377,39 +377,14 @@
               <FilePath>..\src\InitROM.asm</FilePath>
             </File>
             <File>
-              <FileName>Audio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\Audio.c</FilePath>
-            </File>
-            <File>
-              <FileName>Bsp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\Bsp.c</FilePath>
-            </File>
-            <File>
-              <FileName>Fps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\Fps.c</FilePath>
-            </File>
-            <File>
               <FileName>I2C.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\I2C.c</FilePath>
             </File>
             <File>
-              <FileName>Led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\Led.c</FilePath>
-            </File>
-            <File>
               <FileName>Timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\Timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>Touch.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\Touch.c</FilePath>
             </File>
             <File>
               <FileName>UART0.c</FileName>
@@ -426,15 +401,50 @@
               <FileType>1</FileType>
               <FilePath>..\src\ADC.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>dqiot_src</GroupName>
-          <Files>
+            <File>
+              <FileName>dqiot_drv.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv.c</FilePath>
+            </File>
+            <File>
+              <FileName>dqiot_drv_audio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv_audio.c</FilePath>
+            </File>
+            <File>
+              <FileName>dqiot_drv_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>dqiot_drv_fp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv_fp.c</FilePath>
+            </File>
+            <File>
+              <FileName>dqiot_drv_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>dqiot_drv_touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv_touch.c</FilePath>
+            </File>
+            <File>
+              <FileName>dqiot_drv_wifi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv_wifi.c</FilePath>
+            </File>
             <File>
               <FileName>dqiot_fp_sy.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\dqiot_src\dqiot_fp_sy.c</FilePath>
+              <FilePath>..\src\dqiot_fp_sy.c</FilePath>
+            </File>
+            <File>
+              <FileName>dqiot_drv_reset.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\dqiot_drv_reset.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -442,9 +452,89 @@
           <GroupName>mmi_src</GroupName>
           <Files>
             <File>
+              <FileName>dq_otp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\dq_otp.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_alarm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_alarm.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_audio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_audio.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_com.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_com.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_fm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_fm.c</FilePath>
+            </File>
+            <File>
               <FileName>mmi_fps.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mmi_src\mmi_fps.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_fs.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_ms.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_ms.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_rfid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_rfid.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_rst.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_rst.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_sys.c</FilePath>
+            </File>
+            <File>
+              <FileName>mmi_wifi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mmi_src\mmi_wifi.c</FilePath>
             </File>
           </Files>
         </Group>

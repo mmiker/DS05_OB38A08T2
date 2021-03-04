@@ -1,0 +1,94 @@
+C51 COMPILER V9.59.0.0   DQIOT_DRV_FP                                                      03/04/2021 15:14:14 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DQIOT_DRV_FP
+OBJECT MODULE PLACED IN .\Objects\dqiot_drv_fp.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\dqiot_drv_fp.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mm
+                    -i_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\dqiot_drv_fp.lst) TABS(2) OBJECT(.\Objects\dqiot_drv_fp.obj)
+
+line level    source
+
+   1          #ifndef __DQIOT_DRV_FP_C__
+   2          #define __DQIOT_DRV_FP_C__
+   3          
+   4          #include "OB38A08T2.h"
+   5          #include "dqiot_drv_fp.h"
+   6          #include "UART0.h"
+   7          #include "Timer.h"
+   8            
+   9          //FP_INT:P0.3 INPUT
+  10          #define FP_INT P0_3
+  11            
+  12          #define FP_INT_INIT P0M1|=0x08;P0M0&=0xF7
+  13          
+  14          /*
+  15          parameter: 
+  16            none
+  17          return :
+  18            none
+  19          */
+  20          void dqiot_drv_fp_init(void)
+  21          {
+  22   1        FP_INT_INIT;    
+  23   1        return;
+  24   1      }
+  25          
+  26          /*
+  27          parameter: 
+  28            none
+  29          return :
+  30            none
+  31          */
+  32          void dqiot_drv_fp_wake_up(void)
+  33          {
+  34   1          //gpio_bit_reset(FP_PWR_PORT,FP_PWR_PIN);  
+  35   1        P2M1|=0x40;P2M0|=0x40;
+  36   1        P2M1|=0x20;P2M0|=0x20;
+  37   1        return;
+  38   1      }
+  39          
+  40          /*
+  41          parameter: 
+  42            none
+  43          return :
+  44            none
+  45          */
+  46          void dqiot_drv_fp_enter_sleep(void)
+  47          {
+  48   1         // gpio_bit_set(FP_PWR_PORT,FP_PWR_PIN);
+  49   1        P2M1|=0x40;P2M0&=0xBF;
+  50   1        P2M1|=0x20;P2M0&=0xDF;
+  51   1        P2_6 = 0;
+  52   1        P2_5 = 0;
+  53   1        return;
+  54   1      }
+C51 COMPILER V9.59.0.0   DQIOT_DRV_FP                                                      03/04/2021 15:14:14 PAGE 2   
+
+  55          
+  56          /*
+  57          parameter: 
+  58            none
+  59          return :
+  60            none
+  61          */
+  62          unsigned char dqiot_drv_fp_get_int_state(void)
+  63          {
+  64   1        return FP_INT;
+  65   1      }
+  66          
+  67          #endif//__DQIOT_DRV_FP_C__
+  68          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     43    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

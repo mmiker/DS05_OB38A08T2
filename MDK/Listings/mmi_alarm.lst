@@ -1,0 +1,126 @@
+C51 COMPILER V9.59.0.0   MMI_ALARM                                                         03/04/2021 15:15:14 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MMI_ALARM
+OBJECT MODULE PLACED IN .\Objects\mmi_alarm.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\mmi_src\mmi_alarm.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\m
+                    -mi_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\mmi_alarm.lst) TABS(2) OBJECT(.\Objects\mmi_alarm.obj)
+
+line level    source
+
+   1          #include "mmi_alarm.h"
+   2          #if defined (__LOCK_ALARM_SUPPORT__) || defined (__LOCK_CONTROL_SUPPORT__)
+   3          #include "dqiot_drv_alarm.h"
+*** WARNING C318 IN LINE 3 OF ..\mmi_src\mmi_alarm.c: can't open file 'dqiot_drv_alarm.h'
+   4          #include "dqiot_drv_control.h"
+   5          #include "mmi_ms.h"
+   6          #include "mmi_sys.h"
+   7          #include "mmi_led.h"
+   8          
+   9          static unsigned char alarm_state = 0;
+  10          /*
+  11          parameter: 
+  12            none
+  13          return :
+  14            none
+  15          */
+  16          void mmi_dq_alarm_start(void)
+  17          {
+  18   1      #ifdef __LOCK_CONTROL_SUPPORT__
+  19   1        control_open_alarm();
+  20   1      #endif
+  21   1      #ifdef __LOCK_ALARM_SUPPORT__
+                Alarm_start();
+              #endif
+  24   1      
+  25   1        alarm_state = 1;
+  26   1        mmi_dq_sys_alarm_timer_start();
+  27   1        mmi_dq_signal_led_shine_timer_start(LED_TYPE_SET,255,1);
+  28   1      }
+  29          
+  30          /*
+  31          parameter: 
+  32            none
+  33          return :
+  34            none
+  35          */
+  36          void mmi_dq_alarm_stop(void)
+  37          {
+  38   1      #ifdef __LOCK_CONTROL_SUPPORT__
+  39   1        control_closed_alarm();
+  40   1      #endif
+  41   1      #ifdef __LOCK_ALARM_SUPPORT__
+                Alarm_stop();
+              #endif
+  44   1        alarm_state = 0;
+  45   1        mmi_dq_sys_alarm_timer_stop();
+  46   1        mmi_dq_signal_led_close(LED_TYPE_SET);
+  47   1      }
+  48          
+  49          /*
+  50          parameter: 
+  51            none
+  52          return :
+  53            none
+C51 COMPILER V9.59.0.0   MMI_ALARM                                                         03/04/2021 15:15:14 PAGE 2   
+
+  54          */
+  55          void mmi_dq_alarm_task_pro(void)
+  56          {
+  57   1        if(alarm_state != 0 && mmi_dq_sys_get_alarm_timer_flag() == 1)
+  58   1        {
+  59   2          SYS_BASE_STATUS state = mmi_dq_ms_get_sys_state();
+  60   2      #ifdef __LOCK_CONTROL_SUPPORT__
+  61   2          control_closed_alarm();
+  62   2      #endif
+  63   2      #ifdef __LOCK_ALARM_SUPPORT__
+                  Alarm_stop();
+              #endif
+  66   2          alarm_state = 0;
+  67   2      
+  68   2          if(state == SYS_STATUS_INPUT_ADMIN_PWD)
+  69   2            mmi_dq_signal_led_light(LED_TYPE_SET);
+  70   2          else
+  71   2            mmi_dq_signal_led_close(LED_TYPE_SET);
+  72   2        }
+  73   1      }
+  74          
+  75          /*
+  76          parameter: 
+  77            none
+  78          return :
+  79            none
+  80          */
+  81          void mmi_dq_alarm_init(void)
+  82          {
+  83   1      #ifdef __LOCK_ALARM_SUPPORT__
+                Alarm_init();
+              #endif
+  86   1      }
+  87          
+  88          /*
+  89          parameter: 
+  90            none
+  91          return :
+  92            none
+  93          */
+  94          unsigned char mmi_dq_get_alarm_state(void)
+  95          {
+  96   1        return alarm_state;
+  97   1      }
+  98          
+  99          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     91    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

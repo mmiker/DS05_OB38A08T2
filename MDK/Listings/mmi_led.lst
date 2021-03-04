@@ -1,0 +1,177 @@
+C51 COMPILER V9.59.0.0   MMI_LED                                                           03/04/2021 15:15:15 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MMI_LED
+OBJECT MODULE PLACED IN .\Objects\mmi_led.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\mmi_src\mmi_led.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi
+                    -_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\mmi_led.lst) TABS(2) OBJECT(.\Objects\mmi_led.obj)
+
+line level    source
+
+   1          #ifndef __BASE_MMI_LED_C__
+   2          #define __BASE_MMI_LED_C__
+   3          
+   4          #include "mmi_led.h"
+   5          #include "mmi_sys.h"
+   6          #include "mmi_key.h"
+   7          #include "dqiot_drv_control.h"
+   8          #include "dqiot_drv_led.h"
+   9          
+  10          static unsigned char light_type[4] = {0};
+  11          static unsigned char led_flash_flag = 0;
+  12          
+  13          void mmi_dq_led_init(void)
+  14          {
+  15   1        dqiot_drv_signal_led_init();
+  16   1      
+  17   1      }
+  18          
+  19          void mmi_dq_signal_led_light(unsigned char light)
+  20          {
+  21   1        light_type[light-1] = 0;
+  22   1        dqiot_drv_signal_led_on(light);
+  23   1      }
+  24          
+  25          void mmi_dq_signal_led_close(unsigned char light)
+  26          {
+  27   1        light_type[light-1] = 0;
+  28   1        dqiot_drv_signal_led_off(light);
+  29   1      }
+  30          
+  31          static void mmi_dq_signal_led_toggle(unsigned char light)
+  32          {
+  33   1        dqiot_drv_signal_led_toggle(light);
+  34   1      }
+  35          
+  36          void mmi_dq_signal_led_shine_timer_start (unsigned char light, unsigned char times, unsigned char is_on)
+  37          {
+  38   1        if(is_on)
+  39   1          mmi_dq_signal_led_light(light);
+  40   1        else
+  41   1          mmi_dq_signal_led_close(light);
+  42   1        light_type[light-1] = times;
+  43   1        mmi_dq_sys_set_led_shine_timer();
+  44   1      }
+  45          
+  46          static void mmi_dq_signal_led_shine_toggle (void)
+  47          {
+  48   1        unsigned char i;
+  49   1        unsigned char con = 0;
+  50   1        for(i=0;i<4;i++)
+  51   1        {
+  52   2          if(light_type[i]!=0)
+  53   2          {
+  54   3            mmi_dq_signal_led_toggle(i+1);
+C51 COMPILER V9.59.0.0   MMI_LED                                                           03/04/2021 15:15:15 PAGE 2   
+
+  55   3            con = 1;
+  56   3            if(light_type[i] != 255)
+  57   3              light_type[i] --;
+  58   3          }
+  59   2        }
+  60   1        if(con != 0)
+  61   1          mmi_dq_sys_set_led_shine_timer();
+  62   1        return;
+  63   1      }
+  64          
+  65          void mmi_dq_key_light_light(unsigned char num)
+  66          {
+  67   1      
+  68   1      
+  69   1      }
+*** WARNING C280 IN LINE 65 OF ..\mmi_src\mmi_led.c: 'num': unreferenced local variable
+  70          
+  71          void mmi_dq_key_light_close(unsigned char num)
+  72          {
+  73   1      
+  74   1      }
+*** WARNING C280 IN LINE 71 OF ..\mmi_src\mmi_led.c: 'num': unreferenced local variable
+  75          
+  76          
+  77          void mmi_dq_key_light_flash_timer_start(void)
+  78          {
+  79   1        led_flash_flag=1;
+  80   1        mmi_dq_sys_set_led_flash_timer();
+  81   1        mmi_dq_key_light_close(KEY_ALL);
+  82   1      }
+  83          
+  84          static void mmi_dq_key_light_flash_toggle (void)
+  85          {
+  86   1        if (led_flash_flag<13)
+  87   1        {
+  88   2          if(led_flash_flag%2==1)
+  89   2            mmi_dq_key_light_light(KEY_ALL);
+  90   2          else if(led_flash_flag%2==0)
+  91   2            mmi_dq_key_light_close(KEY_ALL);
+  92   2          mmi_dq_sys_set_led_flash_timer();
+  93   2        }
+  94   1        else 
+  95   1        {
+  96   2          mmi_dq_key_light_close(KEY_ALL);
+  97   2        }
+  98   1        led_flash_flag++;
+  99   1        return;
+ 100   1      }
+ 101          
+ 102          
+ 103          
+ 104          void mmi_dq_inside_led_light(void)
+ 105          {
+ 106   1        control_open_light();
+ 107   1      }
+ 108          
+ 109          void mmi_dq_inside_led_close(void)
+ 110          {
+ 111   1        control_closed_light();
+ 112   1      }
+ 113          
+ 114          void mmi_dq_inside_led_timer_stop (void)
+C51 COMPILER V9.59.0.0   MMI_LED                                                           03/04/2021 15:15:15 PAGE 3   
+
+ 115          {
+ 116   1        if(mmi_dq_sys_get_inside_led_timer() > 0)
+ 117   1        {
+ 118   2          mmi_dq_inside_led_close();
+ 119   2          mmi_dq_sys_clear_inside_led_timer();
+ 120   2        }
+ 121   1      }
+ 122          
+ 123          
+ 124          void mmi_dq_inside_led_timer_start (void)
+ 125          {
+ 126   1        mmi_dq_inside_led_light();
+ 127   1        mmi_dq_sys_set_inside_led_timer();
+ 128   1      }
+ 129          
+ 130          
+ 131          void mmi_dq_led_task_proc(void)
+ 132          {
+ 133   1        unsigned char flag = mmi_dq_sys_get_led_timer_flag();
+ 134   1        if(flag & 0x01)
+ 135   1        {
+ 136   2          mmi_dq_inside_led_close();
+ 137   2        }
+ 138   1        if(flag & 0x02)
+ 139   1        {
+ 140   2          mmi_dq_signal_led_shine_toggle();
+ 141   2        }
+ 142   1        if(flag & 0x04)
+ 143   1        {
+ 144   2          mmi_dq_key_light_flash_toggle();
+ 145   2        }
+ 146   1      }
+ 147          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    325    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      5       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

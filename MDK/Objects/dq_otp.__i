@@ -1,0 +1,1 @@
+"..\mmi_src\dq_otp.c" LARGE OPTIMIZE (8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\dq_otp.lst) TABS (2) OBJECT(.\Objects\dq_otp.obj)

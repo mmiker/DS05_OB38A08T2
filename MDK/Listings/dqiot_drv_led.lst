@@ -1,0 +1,86 @@
+C51 COMPILER V9.59.0.0   DQIOT_DRV_LED                                                     03/04/2021 15:15:14 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DQIOT_DRV_LED
+OBJECT MODULE PLACED IN .\Objects\dqiot_drv_led.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\dqiot_drv_led.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\m
+                    -mi_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\dqiot_drv_led.lst) TABS(2) OBJECT(.\Objects\dqiot_drv_led.obj)
+
+line level    source
+
+   1          #ifndef __DQIOT_DRV_LED_C__
+   2          #define __DQIOT_DRV_LED_C__
+   3          
+   4          #include "dqiot_drv.h"
+   5          #include "dqiot_drv_led.h"
+   6          
+   7          /*
+   8          parameter: 
+   9            none
+  10          return :
+  11            none
+  12          */
+  13          void dqiot_drv_signal_led_init(void)
+  14          {
+  15   1        TKRUNTIME = 28;
+  16   1        dCOM0 = 1;
+  17   1        COMEN  = 0x01;
+  18   1        SEGEN0 = 0x00;
+  19   1        SEGEN1 = 0x00;
+  20   1        LEDCLK = 35;
+  21   1        LEDCON = 0x90;
+  22   1      }
+  23          
+  24          /*
+  25          parameter: 
+  26            none
+  27          return :
+  28            none
+  29          */
+  30          void dqiot_drv_signal_led_on(unsigned char led)
+  31          {
+  32   1        SEGEN0 |= led;
+  33   1      }
+  34          
+  35          /*
+  36          parameter: 
+  37            none
+  38          return :
+  39            none
+  40          */
+  41          void dqiot_drv_signal_led_off(unsigned char led)
+  42          {
+  43   1        SEGEN0 &= ~led;
+  44   1      }
+  45          
+  46          /*
+  47          parameter: 
+  48            none
+  49          return :
+  50            none
+  51          */
+  52          void dqiot_drv_signal_led_toggle(unsigned char led)
+  53          {
+  54   1        if(SEGEN0&led)
+C51 COMPILER V9.59.0.0   DQIOT_DRV_LED                                                     03/04/2021 15:15:14 PAGE 2   
+
+  55   1          SEGEN0 &= ~led;
+  56   1        else
+  57   1          SEGEN0 |= led;
+  58   1      }
+  59          
+  60          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     74    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      4    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

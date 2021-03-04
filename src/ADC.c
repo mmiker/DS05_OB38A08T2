@@ -34,48 +34,6 @@ void ADCInterrupt(void) interrupt d_ADC_Vector // ADC Interrupt Vector Address 0
 
 unsigned int ADC(void)
 {
-    if (d_ADCnEN0 & 0x01)
-    {
-        ADC_Start(d_ADC_CH0_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
-    if (d_ADCnEN0 & 0x02)
-    {
-        ADC_Start(d_ADC_CH1_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
-    if (d_ADCnEN0 & 0x04)
-    {
-        ADC_Start(d_ADC_CH2_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
-    if (d_ADCnEN0 & 0x08)
-    {
-        ADC_Start(d_ADC_CH3_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
-    if (d_ADCnEN0 & 0x10)
-    {
-        ADC_Start(d_ADC_CH4_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
-    if (d_ADCnEN0 & 0x20)
-    {
-        ADC_Start(d_ADC_CH5_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
     if (d_ADCnEN0 & 0x40)
     {
         ADC_Start(d_ADC_CH6_IN);
@@ -83,21 +41,6 @@ unsigned int ADC(void)
             ;
         ADCfinish = 0;
     }
-    if (d_ADCnEN0 & 0x80)
-    {
-        ADC_Start(d_ADC_CH7_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
-    if (d_ADCnEN1 & 0x80)
-    {
-        ADC_Start(d_ADC_BG_IN);
-        while (!ADCfinish)
-            ;
-        ADCfinish = 0;
-    }
-
     return n_data;
 }
 
@@ -117,7 +60,9 @@ uint16_t get_adc_data(uint8_t adc_channel_addr)
 
 /**
   * @brief  获取adc数据的平均值
-  * @param  adc_channel_addr ADC channel; times 时间ms
+  * @param  
+  * adc_channel_addr ADC channel;
+  * times 时间ms
   * @return none
   * @note   none
   * @see    none

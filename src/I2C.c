@@ -125,7 +125,7 @@ void I2C_Master_Read_Data(unsigned char addr, unsigned char * receivedata, unsig
 	iic_master_stop();
 }
 
-void I2C_Master_Write_Data(unsigned char addr, unsigned char * senddata, unsigned char sendlen)
+void I2C_Master_Write_Data(unsigned char addr, unsigned char * senddata, unsigned char sendlen, unsigned char is_stop)
 {
 	unsigned char i;
 	iic_master_start();
@@ -134,6 +134,7 @@ void I2C_Master_Write_Data(unsigned char addr, unsigned char * senddata, unsigne
 	{
 		iic_master_write_byte(senddata[i]);
 	}
-	iic_master_stop();
+	if(is_stop)
+		iic_master_stop();
 }
 

@@ -1,10 +1,10 @@
-C51 COMPILER V9.59.0.0   AUDIO                                                             03/04/2021 10:18:14 PAGE 1   
+C51 COMPILER V9.59.0.0   AUDIO                                                             02/23/2021 10:28:31 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE AUDIO
 OBJECT MODULE PLACED IN .\Objects\Audio.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\Audio.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc;.
-                    -.\dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Audio.lst) TABS(2) OBJECT(.\Objects\Audio.obj)
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\src\Audio.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc) DEBUG OBJECTEXTEN
+                    -D PRINT(.\Listings\Audio.lst) TABS(2) OBJECT(.\Objects\Audio.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   2          {
   53   3            if(audio_cache[i]==0)
   54   3              break;
-C51 COMPILER V9.59.0.0   AUDIO                                                             03/04/2021 10:18:14 PAGE 2   
+C51 COMPILER V9.59.0.0   AUDIO                                                             02/23/2021 10:28:31 PAGE 2   
 
   55   3          }
   56   2          if(i<AUDIO_MAX_CACHE_NUM)
@@ -126,7 +126,7 @@ line level    source
  114   3            AUD_RST_CLR;
  115   3            AUD_DATA_CLR;
  116   3            audio_flag = 2;
-C51 COMPILER V9.59.0.0   AUDIO                                                             03/04/2021 10:18:14 PAGE 3   
+C51 COMPILER V9.59.0.0   AUDIO                                                             02/23/2021 10:28:31 PAGE 3   
 
  117   3          }
  118   2        }
@@ -190,18 +190,18 @@ line level    source
  176   2        }
  177   1        else
  178   1          Audio_Select_Handle_in_Timer();
-C51 COMPILER V9.59.0.0   AUDIO                                                             03/04/2021 10:18:14 PAGE 4   
+C51 COMPILER V9.59.0.0   AUDIO                                                             02/23/2021 10:28:31 PAGE 4   
 
  179   1      }
  180          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    517    ----
+   CODE SIZE        =    375    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     23       3
+   XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----    ----
+   DATA SIZE        =     23       3
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

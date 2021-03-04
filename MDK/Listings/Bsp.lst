@@ -1,90 +1,78 @@
-C51 COMPILER V9.59.0.0   BSP                                                               03/04/2021 10:18:15 PAGE 1   
+C51 COMPILER V9.59.0.0   BSP                                                               02/22/2021 15:29:05 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE BSP
 OBJECT MODULE PLACED IN .\Objects\Bsp.obj
-COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE ..\src\Bsp.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc;..\
-                    -dqiot_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Bsp.lst) TABS(2) OBJECT(.\Objects\Bsp.obj)
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\src\Bsp.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\inc) DEBUG OBJECTEXTEND 
+                    -PRINT(.\Listings\Bsp.lst) TABS(2) OBJECT(.\Objects\Bsp.obj)
 
 line level    source
 
    1          #include "OB38A08T2.h"
    2          #include "Bsp.h"
    3          
-   4          //LDO_EN:P1.3 PUSHPULL
-   5          //VIB_INT:P1.4 INPUT
-   6          //KEY1:P1.7 INPUT
-   7          //KEY_2/ADC:P1.2 INPUT
-   8          #define LDO_EN_INIT \
-   9            P1M1 &= 0xF7;   \
-  10            P1M0 |= 0x08
-  11          #define VIB_INT_INIT \
-  12            P1M1 |= 0x10;    \
-  13            P1M0 &= 0xEF
-  14          #define KEY1_INIT \
-  15            P1M1 |= 0x80; \
-  16            P1M0 &= 0x7F
-  17          #define KEY2_ADC_INIT \
-  18            P1M1 |= 0x04;     \
-  19            P1M0 &= 0xFB
-  20          
-  21          #define LDO_EN_ON P1_3 = 1
-  22          #define LDO_EN_OFF P1_3 = 0
-  23          void Bsp_Init(void)
-  24          {
-  25   1        LDO_EN_INIT;
-  26   1        VIB_INT_INIT;
-  27   1        KEY1_INIT;
-  28   1        KEY2_ADC_INIT;
+   4          
+   5          //LDO_EN:P1.3 PUSHPULL
+   6          //VIB_INT:P1.4 INPUT
+   7          //KEY1:P1.7 INPUT
+   8          //KEY_2/ADC:P1.2 INPUT
+   9          #define LDO_EN_INIT P1M1&=0xF7;P1M0|=0x08
+  10          #define VIB_INT_INIT P1M1|=0x10;P1M0&=0xEF
+  11          #define KEY1_INIT P1M1|=0x80;P1M0&=0x7F
+  12          #define KEY2_ADC_INIT P1M1|=0x04;P1M0&=0xFB
+  13          
+  14          #define LDO_EN_ON P1_3 = 1
+  15          #define LDO_EN_OFF P1_3 = 0
+  16          void Bsp_Init(void)
+  17          {
+  18   1        LDO_EN_INIT;
+  19   1        VIB_INT_INIT;
+  20   1        KEY1_INIT;
+  21   1        KEY2_ADC_INIT;
+  22   1      
+  23   1        LDO_EN_ON;
+  24   1      }
+  25          
+  26          void Bsp_Sleep(void)
+  27          {
+  28   1        LDO_EN_OFF;
   29   1      
-  30   1        LDO_EN_ON;
-  31   1      }
-  32          
-  33          void Bsp_Sleep(void)
-  34          {
-  35   1        LDO_EN_OFF;
-  36   1      
-  37   1        S0CON &= 0xEF;
-  38   1        P2M1 |= 0x40;
-  39   1        P2M0 &= 0xBF;
-  40   1        P2M1 |= 0x20;
-  41   1        P2M0 &= 0xDF;
-  42   1        P2_6 = 0;
-  43   1        P2_5 = 0;
-  44   1      
-  45   1        P0M1 |= 0x01;
-  46   1        P0M0 &= 0xFE;
-  47   1        P1M1 |= 0x40;
-  48   1        P1M0 &= 0xBF;
-  49   1        P0_0 = 0;
-  50   1        P1_6 = 0;
-  51   1      
-  52   1        //P3M1|=0x02;P3M0&=0xFD;
-  53   1        //P3_0 = 0;
-  54   1      }
-C51 COMPILER V9.59.0.0   BSP                                                               03/04/2021 10:18:15 PAGE 2   
+  30   1        S0CON &= 0xEF;
+  31   1         P2M1|=0x40;P2M0&=0xBF;
+  32   1         P2M1|=0x20;P2M0&=0xDF;
+  33   1         P2_6 = 0;
+  34   1        P2_5 = 0;
+  35   1      
+  36   1        P0M1|=0x01;P0M0&=0xFE;
+  37   1        P1M1|=0x40;P1M0&=0xBF;
+  38   1        P0_0 = 0;
+  39   1        P1_6 = 0;
+  40   1      
+  41   1        //P3M1|=0x02;P3M0&=0xFD;
+  42   1        //P3_0 = 0;
+  43   1      
+  44   1        
+  45   1      }
+  46          
+  47          
+  48          
+  49          
+  50          void INT1_Init(void)
+  51          {
+  52   1        P2M1|=0x40;P2M0&=0xBF;
+  53   1        P2_6 = 0;
+  54   1      
+C51 COMPILER V9.59.0.0   BSP                                                               02/22/2021 15:29:05 PAGE 2   
 
-  55          
-  56          void Bsp_Wakeup(void)
-  57          {
-  58   1        LDO_EN_ON;
+  55   1        IT1 = 1;
+  56   1        ENHIT |= 0x08;
+  57   1        INTDEG |= 0x04;
+  58   1        EX1 = 1;
   59   1      }
-  60          
-  61          void INT1_Init(void)
-  62          {
-  63   1        P2M1 |= 0x40;
-  64   1        P2M0 &= 0xBF;
-  65   1        P2_6 = 0;
-  66   1      
-  67   1        IT1 = 1;
-  68   1        ENHIT |= 0x08;
-  69   1        INTDEG |= 0x04;
-  70   1        EX1 = 1;
-  71   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     87    ----
+   CODE SIZE        =     84    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

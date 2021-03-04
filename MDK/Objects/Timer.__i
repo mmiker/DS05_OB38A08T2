@@ -1,0 +1,1 @@
+"..\src\Timer.c" LARGE OPTIMIZE (8,SPEED) BROWSE INCDIR(..\inc;..\mmi_inc) DEBUG OBJECTEXTEND PRINT(.\Listings\Timer.lst) TABS (2) OBJECT(.\Objects\Timer.obj)
